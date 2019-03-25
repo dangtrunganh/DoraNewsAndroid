@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+</LinearLayout>
+<!--<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+    <!--tools:context="com.dt.anh.doranews.DetailEventActivity"-->
+    <!--tools:showIn="@layout/activity_detail_event"-->
+    <!--android:padding="10dp">-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<android.support.v7.widget.RecyclerView-->
+            <!--android:id="@+id/recycler_news_detail_event"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+
+        <!--</android.support.v7.widget.RecyclerView>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="right"-->
+            <!--android:orientation="horizontal">-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:paddingVertical="2dp"-->
+                <!--android:text="Xem thêm"-->
+                <!--android:textColor="#07609c"-->
+                <!--android:textSize="14sp"-->
+                <!--android:textStyle="italic" />-->
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="left"-->
+            <!--android:orientation="horizontal">-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:paddingVertical="2dp"-->
+                <!--android:text="Dòng sự kiện"-->
+                <!--android:textColor="#000"-->
+                <!--android:textSize="15sp"-->
+                <!--android:textStyle="italic|bold" />-->
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@drawable/custom_border_steam_event"-->
+            <!--android:orientation="vertical">-->
+
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:text="- 28/6/2018: Nga gặp Trung Quốc lần thứ 2 trong năm"-->
+                <!--android:textColor="#000"-->
+                <!--android:textSize="15sp"-->
+                <!--android:textStyle="normal" />-->
+
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:text="- 28/9/2015: Nga gặp Trung Quốc lần thứ 6 trong năm"-->
+                <!--android:textColor="#000"-->
+                <!--android:textSize="15sp"-->
+                <!--android:textStyle="normal" />-->
+
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:text="- 28/6/2018: Việt Nam vô địch giải châu Á"-->
+                <!--android:textColor="#000"-->
+                <!--android:textSize="15sp"-->
+                <!--android:textStyle="normal" />-->
+
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:text="- 28/1/2019: Lễ phát động toàn dân trồng cây"-->
+                <!--android:textColor="#000"-->
+                <!--android:textSize="15sp"-->
+                <!--android:textStyle="normal" />-->
+
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:text="- 28/6/2018: Game Việt đang gặp nhiều khó khăn lớn"-->
+                <!--android:textColor="#000"-->
+                <!--android:textSize="15sp"-->
+                <!--android:textStyle="normal" />-->
+
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:text="- 28/6/2018: Nga gặp Trung Quốc lần thứ 2 trong năm"-->
+                <!--android:textColor="#000"-->
+                <!--android:textSize="15sp"-->
+                <!--android:textStyle="normal" />-->
+
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:text="- 20/6/2018: Khủng bố xảy ra tại Nga"-->
+                <!--android:textColor="#000"-->
+                <!--android:textSize="15sp"-->
+                <!--android:textStyle="normal" />-->
+
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:text="- 28/6/2018: Nga gặp Trung Quốc lần thứ 2 trong năm"-->
+                <!--android:textColor="#000"-->
+                <!--android:textSize="15sp"-->
+                <!--android:textStyle="normal" />-->
+
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:text="- 28/6/2018: Nga gặp Trung Quốc lần thứ 2 trong năm"-->
+                <!--android:textColor="#000"-->
+                <!--android:textSize="15sp"-->
+                <!--android:textStyle="normal" />-->
+
+
+        <!--</LinearLayout>-->
+
+    <!--</LinearLayout>-->
+
+<!--</android.support.v4.widget.NestedScrollView>-->

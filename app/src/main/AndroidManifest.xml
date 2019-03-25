@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.dt.anh.doranews">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:hardwareAccelerated="false"
+        android:icon="@drawable/icon_app_dora"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:roundIcon="@drawable/icon_app_dora"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".EmptyActivity"
+            android:hardwareAccelerated="true"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".DetailEventActivity"
+            android:hardwareAccelerated="true" />
+        <activity
+            android:name=".MainActivity"
+            android:hardwareAccelerated="true" />
+        <activity
+            android:name=".DetailNewsActivity"
+            android:hardwareAccelerated="true" />
+        <activity
+            android:name=".WebViewActivity"
+            android:hardwareAccelerated="true" />
+        <activity
+            android:name=".PickCategoryActivity"
+            android:hardwareAccelerated="true" />
+        <activity
+            android:name=".LoginActivity"
+            android:hardwareAccelerated="true" />
+        <activity android:name=".TestAct" />
+        <activity android:name=".AllNewsActivity" />
+
+        <service android:name=".service.ArticlePlayerService" />
+        <service android:name=".service.servicefirebase.FirebaseInstanceService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".SearchActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_search"
+            android:theme="@style/FullscreenTheme"></activity>
+    </application>
+
+</manifest>

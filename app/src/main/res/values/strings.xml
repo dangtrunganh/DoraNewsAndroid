@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">DoraNews</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Dang Trung Anh</string>
+    <string name="nav_header_subtitle">anhdt.hust@gmail.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_news_name">Đội tuyển Việt Nam lách cửa hẹp vào vòng đấu 1–8</string>
+    <string name="or_sign_in_with">Or sign in with:</string>
+    <string name="don_t_have_an_account">Don\'t have An Account?</string>
+    <string name="title_song_name">Dora</string>
+    <string name="title_default_artist">Newwwww</string>
+    <string name="title_default_duration">00:00</string>
+    <string name="content_detail_news">Chủ tịch Hồ Chí Minh nhấn mạnh: “Nhiệm vụ giáo dục là rất quan trọng và vẻ vang, nếu không có thầy giáo thì không có giáo dục… không có giáo dục, không có cán bộ thì không nói gì đến kinh tế - văn hóa”(1). Thầy, cô giáo là người định hướng, dẫn dắt thế hệ trẻ từng bước nắm bắt chân lý thời đại, cho nên mọi tài liệu, giáo trình dù hay đến đâu nếu không có thầy giáo hướng dẫn thì không phát huy hết tác dụng đối với thế hệ trẻ.</string>
+    <string name="msg_token_fmt">hi</string>
+
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+</resources>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraint_control_music"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/color_catskill_white"
+    android:paddingBottom="12dp"
+    android:paddingTop="12dp">
+
+    <TextView
+        android:id="@+id/text_title_control_music"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_8"
+        android:layout_marginStart="@dimen/dp_8"
+        android:layout_gravity="center"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text="Đội tuyển Việt Nam lách cửa hẹp vào vòng đấu 1-8"
+        android:textColor="@color/color_black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/circle_image_song_small"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_gravity="right"
+        >
+
+        <ImageView
+            android:id="@+id/image_previous_control_music"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/dp_40"
+            app:srcCompat="@drawable/ic_skip_previous"
+            tools:ignore="VectorDrawableCompat" />
+        <ImageView
+            android:id="@+id/image_play_control_music"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/dp_40"
+            app:srcCompat="@drawable/level_list_play"
+            tools:ignore="VectorDrawableCompat" />
+
+        <ImageView
+            android:id="@+id/image_next_control_music"
+            android:layout_height="@dimen/dp_40"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_skip_next"
+            tools:ignore="VectorDrawableCompat" />
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
