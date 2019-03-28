@@ -45,7 +45,7 @@
 //    Activity mActivity;
 //    int visibleThreshold = 5;
 //    int lastVisibleItem, totalItemCount;
-//    boolean flagLoadContinue = false;
+//    boolean flagFinishLoadData = false;
 //
 //    public NewsAllAdapter(List<Article> listArticles, final Context mContext, RecyclerView recyclerView, NestedScrollView nestedScrollView) {
 //        this.mListArticles = listArticles;
@@ -54,7 +54,7 @@
 //
 //        final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 //
-//        if (!flagLoadContinue) {
+//        if (!flagFinishLoadData) {
 //            nestedScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
 //                if (v.getChildAt(v.getChildCount() - 1) != null) {
 //                    if ((scrollY >= (v.getChildAt(v.getChildCount() - 1).getMeasuredHeight() - v.getMeasuredHeight())) &&
@@ -118,7 +118,7 @@
 //            NewsAllAdapter.ViewHolder viewHolder = (NewsAllAdapter.ViewHolder) holder;
 //            viewHolder.bindData(article);
 //        } else if (holder instanceof EventAdapter.LoadingViewHolder) {
-//            if (!flagLoadContinue) {
+//            if (!flagFinishLoadData) {
 //                return;
 //            }
 //            NewsAllAdapter.LoadingViewHolder loadingViewHolder = (NewsAllAdapter.LoadingViewHolder) holder;
@@ -210,7 +210,7 @@
 //    public void updateListArticles(List<Article> mListArticless) {
 //////        mListEvents = listEvents;
 ////        if (mListArticles.size() - mListCurrentArticles.size() >= VISIBLE_THRESHOLD) {
-////            this.flagLoadContinue = true;
+////            this.flagFinishLoadData = true;
 ////        }
 ////        if (mListArticles.size() <= VISIBLE_THRESHOLD) {
 ////            mListCurrentArticles.addAll(mListArticles);
@@ -239,7 +239,7 @@
 //
 //    public void loadMoreNews() {
 //        if (mListArticles.size() <= VISIBLE_THRESHOLD) {
-//            this.flagLoadContinue = true;
+//            this.flagFinishLoadData = true;
 //            return;
 //        }
 //        if (mListArticles.size() <= currentItemCount + VISIBLE_THRESHOLD) {
@@ -248,7 +248,7 @@
 //                mListCurrentArticles.add(mListArticles.get(i));
 //            }
 //            currentItemCount = mListArticles.size();
-//            this.flagLoadContinue = true;
+//            this.flagFinishLoadData = true;
 //        } else {
 //            Log.e("currentItemCount-XXX", currentItemCount + "");
 //            Log.e("mListArticles.size()", mListArticles.size() + "");
@@ -257,7 +257,7 @@
 //                mListCurrentArticles.add(mListArticles.get(i));
 //            }
 //            currentItemCount = currentItemCount + VISIBLE_THRESHOLD;
-//            this.flagLoadContinue = false;
+//            this.flagFinishLoadData = false;
 //        }
 //        notifyDataSetChanged();
 //        this.setLoaded();
@@ -267,7 +267,7 @@
 //        mListArticles = listArticles;
 //    }
 //
-//    public void setFlagLoadContinue(boolean flagLoadContinue) {
-//        this.flagLoadContinue = flagLoadContinue;
+//    public void setFlagFinishLoadData(boolean flagFinishLoadData) {
+//        this.flagFinishLoadData = flagFinishLoadData;
 //    }
 //}

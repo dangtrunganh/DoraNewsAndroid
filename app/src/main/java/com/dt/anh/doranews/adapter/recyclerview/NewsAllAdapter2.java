@@ -23,6 +23,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.dt.anh.doranews.DetailNewsActivity;
 import com.dt.anh.doranews.R;
 import com.dt.anh.doranews.model.result.eventdetailresult.Article;
+import com.dt.anh.doranews.util.ConstParamAPI;
 import com.dt.anh.doranews.util.ConstParamTransfer;
 import com.google.gson.Gson;
 
@@ -40,7 +41,7 @@ public class NewsAllAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolde
     ILoadMore loadMore;
     boolean isLoading;
     Activity mActivity;
-    public static int VISIBLE_THRESHOLD = 10;
+//    public static int VISIBLE_THRESHOLD = 10;
     int lastVisibleItem, totalItemCount;
     boolean flagLoadContinue = false;
 
@@ -80,7 +81,7 @@ public class NewsAllAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     if (dy > 0) {
                         totalItemCount = linearLayoutManager.getItemCount();
                         lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                        if (!isLoading && totalItemCount <= (lastVisibleItem + VISIBLE_THRESHOLD)) {
+                        if (!isLoading && totalItemCount <= (lastVisibleItem + ConstParamAPI.ARTICLE_THRESHOLD)) {
                             if (loadMore != null)
                                 loadMore.onLoadMore();
                             isLoading = true;
@@ -245,7 +246,7 @@ public class NewsAllAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolde
 //        //====
 //        notifyDataSetChanged();
         //========
-        if (mListArticles.size() < VISIBLE_THRESHOLD) {
+        if (mListArticles.size() < ConstParamAPI.ARTICLE_THRESHOLD) {
             this.flagLoadContinue = true;
         }
         boolean flag = true;

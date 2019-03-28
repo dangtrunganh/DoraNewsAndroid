@@ -240,6 +240,7 @@ public class MainActivity extends AppCompatActivity
                     (PickCategoryActivity.PREF_NAME, MODE_PRIVATE);
             SharedPreferences.Editor editor = pre.edit();
             editor.clear();
+            editor.apply();
             Toast.makeText(this, "Clear cache!", Toast.LENGTH_SHORT).show();
             return true;
         }

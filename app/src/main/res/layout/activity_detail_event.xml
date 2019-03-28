@@ -6,9 +6,10 @@
     android:layout_height="match_parent"
     tools:context="com.dt.anh.doranews.DetailEventActivity">
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view_detail_event"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/include_control_news_act_detail_event"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -112,7 +113,7 @@
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/recycler_long_events"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="match_parent">
 
                         </android.support.v7.widget.RecyclerView>
 
@@ -125,7 +126,7 @@
 
         </android.support.constraint.ConstraintLayout>
 
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
     <include
         android:id="@+id/include_control_news_act_detail_event"

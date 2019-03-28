@@ -127,7 +127,7 @@ public class PickCategoryActivity extends AppCompatActivity implements View.OnCl
             public void onResponse(Call<CategoryAPI> call, Response<CategoryAPI> response) {
                 mCategoryAPI = response.body();
                 if (mCategoryAPI == null) {
-                    Toast.makeText(getApplicationContext(), "Failed to load data", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), "Failed to load data", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 mCategoryListTest = mCategoryAPI.getArrayList();
@@ -162,12 +162,12 @@ public class PickCategoryActivity extends AppCompatActivity implements View.OnCl
                 }
 
                 mCategoryAdapter.updateListCategories(mCategoryListTest);
-                Log.e("1111", "kkkk");
+//                Log.e("1111", "kkkk");
             }
 
             @Override
             public void onFailure(Call<CategoryAPI> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Failed to load data - onFailure", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "Failed to load data - onFailure", Toast.LENGTH_SHORT).show();
             }
         });
         return mCategoryListTest;
@@ -189,11 +189,11 @@ public class PickCategoryActivity extends AppCompatActivity implements View.OnCl
                 List<Category> categoriesChosen = mCategoryAdapter.getListCategoryChosen();
                 //2. Lưu vào trong share preference
                 if (categoriesChosen == null) {
-                    Toast.makeText(this, "categoriesChosen is null", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, "categoriesChosen is null", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (categoriesChosen.size() == 0) {
-                    Toast.makeText(this, "categoriesChosen size is zero", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, "categoriesChosen size is zero", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 //===

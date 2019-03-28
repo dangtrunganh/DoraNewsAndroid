@@ -32,7 +32,9 @@ public interface ServerAPI {
             @Query("includes") String article);
 
     @GET("events")
-    Call<MainDetailLongEvent> getResultLongEvent(@Query("long_event") String idLongEvent);
+    Call<MainDetailLongEvent> getResultLongEvent(@Query("long_event") String idLongEvent,
+                                                 @Query("per_page") String perPage,
+                                                 @Query("page") String page);
 
     @GET("article/voice/{id}")
     Call<EventResult> getArticleVoice(@Path("id") String id);

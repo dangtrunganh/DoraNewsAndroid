@@ -27,6 +27,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.dt.anh.doranews.DetailEventActivity;
 import com.dt.anh.doranews.R;
 import com.dt.anh.doranews.model.result.eventresult.Datum;
+import com.dt.anh.doranews.util.ConstParamAPI;
 import com.dt.anh.doranews.util.ConstParamTransfer;
 
 import java.util.List;
@@ -40,8 +41,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private final int VIEW_TYPE_ITEM = 0, VIEW_TYPE_LOADING = 1;
     ILoadMore loadMore;
     boolean isLoading;
-    Activity mActivity;
-    public static int VISIBLE_THRESHOLD = 10;
+//    public static int VISIBLE_THRESHOLD = 10;
     int lastVisibleItem, totalItemCount;
     boolean flagLoadContinue = false;
 
@@ -60,6 +60,11 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 //        }
 //    }
 
+
+    public boolean isFlagLoadContinue() {
+        return flagLoadContinue;
+    }
+
     public EventAdapter(List<Datum> listEvents, final Context mContext, RecyclerView recyclerView, NestedScrollView nestedScrollView) {
         this.mListEvents = listEvents;
         this.mContext = mContext;
@@ -69,26 +74,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         if (!flagLoadContinue) {
             //animate
-//            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//                @Override
-//                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                    super.onScrolled(recyclerView, dx, dy);
-////                    int currentPosition = linearLayoutManager.findFirstVisibleItemPosition();
-//
-//                }
-//            });
-
             nestedScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-                int posi = linearLayoutManager.findLastVisibleItemPosition();
-                Log.e("xx-positionpp", posi + "");
-
-                int firstVisi = linearLayoutManager.findFirstVisibleItemPosition();
-                Log.e("xx-firstvisi", firstVisi + "");
-
-                int firstVisiCurrent = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
-                Log.e("xx-firstComplete", firstVisiCurrent + "");
-
-
                 if (v.getChildAt(v.getChildCount() - 1) != null) {
                     if ((scrollY >= (v.getChildAt(v.getChildCount() - 1).getMeasuredHeight() - v.getMeasuredHeight())) &&
                             scrollY > oldScrollY) {
@@ -97,7 +83,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             totalItemCount = linearLayoutManager.getItemCount();
                             lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
                             notifyItemChanged(lastVisibleItem);
-                            if (!isLoading && totalItemCount <= (lastVisibleItem + VISIBLE_THRESHOLD)) {
+                            if (!isLoading && totalItemCount <= (lastVisibleItem + ConstParamAPI.EVENT_THRESHOLD)) {
                                 if (loadMore != null)
                                     loadMore.onLoadMore() ;
                                 isLoading = true;
@@ -105,8 +91,6 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         }
                     }
                 }
-//                int position = linearLayoutManager.findFirstVisibleItemPosition();
-//                Log.e("positionpp", position + "");
             });
         }
     }
@@ -128,7 +112,6 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 //        View view = mLayoutInflater.inflate(R.layout.item_event, parent, false);
 //        return new ViewHolder(view);
-
         if (viewType == VIEW_TYPE_ITEM) {
             View view = mLayoutInflater
                     .inflate(R.layout.item_event_3, parent, false);
@@ -149,7 +132,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             ViewHolder viewHolder = (ViewHolder) holder;
             viewHolder.bindData(datum);
         } else if (holder instanceof LoadingViewHolder) {
-            if (!flagLoadContinue) {
+            if (flagLoadContinue) {
                 return;
             }
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
@@ -178,7 +161,6 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             progressBar = itemView.findViewById(R.id.progress_bar_news);
         }
     }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, Animation.AnimationListener {
         private ImageView mImageCoverEvent;
@@ -237,9 +219,13 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 case R.id.lnl_view_event_3:
                     int position = getAdapterPosition();
                     Datum datum = mListEvents.get(position);
-                    String idEvent = datum.getId();
                     Intent intent = new Intent(mContext, DetailEventActivity.class);
+
+                    String idEvent = datum.getId();
                     intent.putExtra(ConstParamTransfer.PARAM_ID_EVENT, idEvent);
+
+                    String idLongEvent = datum.getLongEvent().getId();
+                    intent.putExtra(ConstParamTransfer.PARAM_ID_LONG_EVENT, idLongEvent);
                     mContext.startActivity(intent);
                     break;
                 default:
@@ -276,10 +262,6 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
      * @param listEvents List songs after being changed
      */
     public void updateListEvents(List<Datum> listEvents) {
-//        mListEvents = listEvents;
-        if (listEvents.size() < VISIBLE_THRESHOLD) {
-            this.flagLoadContinue = true;
-        }
         boolean flag = true;
 
         for (Datum datum : mListEvents) {
