@@ -3,6 +3,7 @@ package com.dt.anh.doranews;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,9 +17,11 @@ import com.dt.anh.doranews.api.ServerAPI;
 import com.dt.anh.doranews.fragment.CategoryFragment;
 import com.dt.anh.doranews.model.result.articleresult.ArticleResult;
 import com.dt.anh.doranews.model.result.eventdetailresult.Article;
+import com.dt.anh.doranews.util.ConstParamAPI;
 import com.dt.anh.doranews.util.ConstRoot;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,7 +64,7 @@ public class AllNewsActivity extends AppCompatActivity {
         mToolbar = findViewById(R.id.toolbar_detail_all_news);
         setSupportActionBar(mToolbar);
         try {
-            getSupportActionBar().setHomeButtonEnabled(true);
+            Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,20 +77,19 @@ public class AllNewsActivity extends AppCompatActivity {
         }
 
         if (flagDataTransfer) {
-            loadNews(1);
+            loadNews(ConstParamAPI.START_PAGE);
             mNewsAllAdapter2.setLoadMore(() -> {
                 mArticlesArrayList.add(null);
                 mNewsAllAdapter2.notifyItemInserted(mArticlesArrayList.size() - 1);
                 new Handler().postDelayed(() -> {
                     mArticlesArrayList.remove(mArticlesArrayList.size() - 1);
                     mNewsAllAdapter2.notifyItemRemoved(mArticlesArrayList.size());
-
-                    int index = (int) (Math.ceil(mArticlesArrayList.size() / (NewsAllAdapter2.VISIBLE_THRESHOLD * 1.0))) + 1;
-                    Log.e("MMM", String.valueOf(index));
+                    double thresHold = ConstParamAPI.ARTICLE_THRESHOLD * 1.0;
+                    int index = (int) (Math.ceil(mArticlesArrayList.size() / thresHold)) + 1;
+//                    Log.e("MMM", String.valueOf(index));
                     if (index > 1) {
                         loadNews(index);
                     }
-
                 }, 3000); // Time to load
 
             });
@@ -97,13 +99,11 @@ public class AllNewsActivity extends AppCompatActivity {
 
     public boolean getDataTransfer() {
         Intent intent = getIntent();
-
         if (intent != null) {
             category = intent.getStringExtra(CategoryFragment.PARAM_CATEGORY_NAME_ALL_NEWS);
             slug = intent.getStringExtra(CategoryFragment.PARAM_CATEGORY_SLUG_ALL_NEWS);
             return true;
         }
-
         //Mặc định, chống lỗi
         category = "";
         slug = "";
@@ -119,7 +119,7 @@ public class AllNewsActivity extends AppCompatActivity {
         }
 
         String type = slug;
-        Log.e("TYPEEEE-slug", type);
+//        Log.e("TYPEEEE-slug", type);
         String page = String.valueOf(numberPage);
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -133,7 +133,7 @@ public class AllNewsActivity extends AppCompatActivity {
 
         call.enqueue(new Callback<ArticleResult>() {
             @Override
-            public void onResponse(Call<ArticleResult> call, Response<ArticleResult> response) {
+            public void onResponse(@NonNull Call<ArticleResult> call, @NonNull Response<ArticleResult> response) {
                 articleResult = response.body();
                 if (articleResult == null) {
                     Toast.makeText(getApplicationContext(), "Failed to load data articles", Toast.LENGTH_SHORT).show();
@@ -142,16 +142,12 @@ public class AllNewsActivity extends AppCompatActivity {
                     }
                     return;
                 }
-//                mArticlesArrayList = (ArrayList<Article>) articleResult.getArticles();
-//                Log.e("API article===", mArticlesArrayList.toString());
-////                setUpAdapter(mCategoryListTest);
-//                mNewsAllAdapter2.updateListArticles(mArticlesArrayList);
 
                 if (articleResult.getArticles().size() == 0) {
                     return;
                 }
 
-                if (articleResult.getArticles().size() < NewsAllAdapter2.VISIBLE_THRESHOLD) {
+                if (articleResult.getArticles().size() < ConstParamAPI.ARTICLE_THRESHOLD) {
                     mNewsAllAdapter2.setFlagLoadContinue(true);
                 }
                 mNewsAllAdapter2.updateListArticles(articleResult.getArticles());
@@ -161,7 +157,7 @@ public class AllNewsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ArticleResult> call, Throwable t) {
+            public void onFailure(@NonNull Call<ArticleResult> call, @NonNull Throwable t) {
                 Toast.makeText(getApplicationContext(), "Failed to load data - onFailure articles", Toast.LENGTH_SHORT).show();
                 if (numberPage == 1) {
                     dialog.dismiss();
@@ -173,11 +169,9 @@ public class AllNewsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         switch (id) {
             case android.R.id.home:
-//                Toast.makeText(this, "Surprise :v", Toast.LENGTH_SHORT).show();
                 finish();
                 return true;
             default:

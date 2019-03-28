@@ -22,6 +22,7 @@ import com.dt.anh.doranews.adapter.recyclerview.NewsAllAdapter2;
 import com.dt.anh.doranews.api.ServerAPI;
 import com.dt.anh.doranews.model.result.articleresult.ArticleResult;
 import com.dt.anh.doranews.model.result.eventdetailresult.Article;
+import com.dt.anh.doranews.util.ConstParamAPI;
 import com.dt.anh.doranews.util.ConstRoot;
 import com.dt.anh.doranews.util.UtilTools;
 
@@ -181,7 +182,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     return;
                 }
 
-                if (articleResult.getArticles().size() < NewsAllAdapter2.VISIBLE_THRESHOLD) {
+                if (articleResult.getArticles().size() < ConstParamAPI.ARTICLE_THRESHOLD) {
                     mNewsAllAdapter2.setFlagLoadContinue(true);
                 }
                 mNewsAllAdapter2.updateListArticles(articleResult.getArticles());

@@ -3,7 +3,12 @@ package com.dt.anh.doranews;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
+import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,25 +22,19 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.dt.anh.doranews.adapter.recyclerview.EventAdapter;
 import com.dt.anh.doranews.adapter.recyclerview.LongEventAdapter;
 import com.dt.anh.doranews.adapter.recyclerview.NewsAdapter;
 import com.dt.anh.doranews.api.ServerAPI;
-import com.dt.anh.doranews.fakedata.EventsFake;
-import com.dt.anh.doranews.fakedata.LongEventFake;
-import com.dt.anh.doranews.fakedata.NewsFake;
-import com.dt.anh.doranews.model.Event;
-import com.dt.anh.doranews.model.LongEvent;
-import com.dt.anh.doranews.model.News;
 import com.dt.anh.doranews.model.result.eventdetailresult.Article;
 import com.dt.anh.doranews.model.result.eventdetailresult.EventDetailMainResult;
-import com.dt.anh.doranews.model.result.eventresult.Datum;
-import com.dt.anh.doranews.model.result.eventresult.EventResult;
 import com.dt.anh.doranews.model.result.longevent.MainDetailLongEvent;
+import com.dt.anh.doranews.model.result.longevent.Datum;
+import com.dt.anh.doranews.util.ConstParamAPI;
 import com.dt.anh.doranews.util.ConstParamTransfer;
 import com.dt.anh.doranews.util.ConstRoot;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,7 +45,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class DetailEventActivity extends AppCompatActivity implements View.OnClickListener {
     private Toolbar mToolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
-    private String mId;
+    private String mIdEvent;
     private NewsAdapter mNewsAdapter;
 
     private LongEventAdapter mLongEventAdapter;
@@ -56,50 +55,105 @@ public class DetailEventActivity extends AppCompatActivity implements View.OnCli
     private MainDetailLongEvent mainDetailLongEvent;
     private ProgressDialog dialog;
 
-    private ArrayList<com.dt.anh.doranews.model.result.eventdetailresult.LongEvent> mLongEvents;
-    private ArrayList<Article> mArticles;
+    private ArrayList<Datum> mLongEvents = new ArrayList<>();
+    private ArrayList<Article> mArticles = new ArrayList<>();
 
+    private String mIdLongEvent;
+
+    private final String NUMBER_LONG_EVENT_PER_PAGE_STRING = String.valueOf(ConstParamAPI.NUMBER_LONG_EVENT_PER_PAGE);
+//    private final int START_PAGE = 1;
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_event);
 
-        initViews();
-    }
-
-    public void getDataTransfer() {
-        mLongEvents = new ArrayList<>();
-        mArticles = new ArrayList<>();
-        Intent intent = getIntent();
-        if (intent != null) {
-            mId = intent.getStringExtra(ConstParamTransfer.PARAM_ID_EVENT);
+        if (!getDataFromIntent()) {
+            return;
         }
 
+        initViews();
+        loadListArticles();
+        loadListLongEvent(mIdLongEvent, ConstParamAPI.START_PAGE);
+        setUpLoadMore();
+    }
 
+    private void setUpLoadMore() {
+        if (mLongEventAdapter.isFlagFinishLoadData()) {
+            return;
+        }
+        //Sự kiện loadMore()
+        mLongEventAdapter.setLoadMore(() -> {
+            mLongEventAdapter.addItemLoadMore();
+            new Handler().postDelayed(() -> {
+                mLongEventAdapter.removeItemLoadMore();
+                double thresHold = ConstParamAPI.NUMBER_LONG_EVENT_PER_PAGE * 1.0;
+                int index = (int) (Math.ceil(mLongEvents.size() / thresHold)) + 1;
+                if (index > 1 && (!mLongEventAdapter.isFlagFinishLoadData())) {
+                    loadListLongEvent(mIdLongEvent, index);
+                }
+            }, 2000); // Time to load
+        });
+    }
 
-//        mEventAdapter.updateListEvents(EventsFake.getListEvent());
-        //=====
+    private boolean getDataFromIntent() {
+        mIdEvent = getIdEvent();
+        if (mIdEvent == null) {
+            Toast.makeText(this, "Error: It dose not have mID in intent!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        mIdLongEvent = getIdLongEvent();
+        if (mIdLongEvent == null) {
+            Toast.makeText(this, "Error: It dose not have mIdLongEvent in intent!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private String getIdEvent() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            return intent.getStringExtra(ConstParamTransfer.PARAM_ID_EVENT);
+        } else {
+            return null;
+        }
+    }
+
+    private String getIdLongEvent() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            return intent.getStringExtra(ConstParamTransfer.PARAM_ID_LONG_EVENT);
+        } else {
+            return null;
+        }
+    }
+
+    public void loadListArticles() {
+        mLongEvents = new ArrayList<>();
+        mArticles = new ArrayList<>();
+
+        //=================
         //load event
-        dialog = new ProgressDialog(this);
-        dialog.setMessage("Loading..");
-        dialog.setCancelable(false);
         dialog.show();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ConstRoot.URL_GET_ROOT)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+
         ServerAPI apiService = retrofit.create(ServerAPI.class);
-        Log.e("mID=", mId);
-        Call<EventDetailMainResult> call = apiService.getResultEventDetail(mId, ConstParamTransfer.ARTICLE);
-//        Log.e("pppp=====", call.);
+
+        Call<EventDetailMainResult> call = apiService.getResultEventDetail(mIdEvent, ConstParamTransfer.ARTICLE);
 
         call.enqueue(new Callback<EventDetailMainResult>() {
             @SuppressLint("SetTextI18n")
             @Override
-            public void onResponse(Call<EventDetailMainResult> call, Response<EventDetailMainResult> response) {
+            public void onResponse(@NonNull Call<EventDetailMainResult> call, @NonNull Response<EventDetailMainResult> response) {
                 eventMainResult = response.body();
                 if (eventMainResult == null) {
-                    Toast.makeText(getApplicationContext(), "Failed to load data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Error: Call API successfully, but data is null!", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Glide.with(getApplicationContext()).load(eventMainResult.getImage())
@@ -110,36 +164,31 @@ public class DetailEventActivity extends AppCompatActivity implements View.OnCli
                 mTextNameCategory.setText(eventMainResult.getCategory().getName());
                 mTextNumberNews.setText(eventMainResult.getNumArticles() + " bài báo / " + eventMainResult.getReadableTime());
 
-                //Load Long Events
-                //Dựa vào id
-                String idLongEvent = eventMainResult.getLongEvent().getId();
-                loadLongEvent(idLongEvent);
-
-
-                //Load News
+                //Load into ListArticles
                 mArticles = (ArrayList<Article>) eventMainResult.getArticles();
                 mNewsAdapter.updateListEvents(mArticles);
                 mNewsAdapter.setTitleEvent(eventMainResult.getTitle());
-
-
-                //load LongEvents
-//                String idLongEvent = eventMainResult.getLongEvent().getId();
             }
 
             @Override
             public void onFailure(Call<EventDetailMainResult> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "Failed to load data - onFailure", Toast.LENGTH_SHORT).show();
-                Log.e("FAIL", t.getMessage());
-                Log.e("Fail2", t.toString());
-                Log.e("Fail3", "=====");
-//                t.printStackTrace();
             }
         });
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void initViews() {
-        //====
+        dialog = new ProgressDialog(this);
+        dialog.setMessage("Loading..");
+        dialog.setCancelable(false);
+        if (getIdEvent() == null) {
+            return;
+        }
+
+        //=================
+        //All simple init view
         mImageViewCover = findViewById(R.id.image_cover_detail_event);
         mTextTitleEvent = findViewById(R.id.text_title_detail_event);
         mTextNameCategory = findViewById(R.id.text_category_detail_event);
@@ -148,95 +197,107 @@ public class DetailEventActivity extends AppCompatActivity implements View.OnCli
         mTextLoadMoreNews.setOnClickListener(this);
 
         mToolbar = findViewById(R.id.toolbar_detail_event);
-        collapsingToolbarLayout = findViewById(R.id.collab_toolbar_layout_detail_event);
-
         setSupportActionBar(mToolbar);
         try {
-            getSupportActionBar().setHomeButtonEnabled(true);
+            Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        collapsingToolbarLayout = findViewById(R.id.collab_toolbar_layout_detail_event);
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        mToolbar.setNavigationOnClickListener(v -> finish());
 
         collapsingToolbarLayout.setTitleEnabled(false);
         this.setTitle("");
 
         //=================
-        //recyclerview
-        mNewsAdapter = new NewsAdapter(new ArrayList<Article>(), this, mTextLoadMoreNews);
+        //RecyclerView - List of events
         RecyclerView recyclerViewNews = findViewById(R.id.recycler_news_detail_event);
-        recyclerViewNews.setNestedScrollingEnabled(false);
+        mNewsAdapter = new NewsAdapter(mArticles, this, mTextLoadMoreNews);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
         recyclerViewNews.setLayoutManager(linearLayoutManager);
+        recyclerViewNews.setNestedScrollingEnabled(false);
         recyclerViewNews.setAdapter(mNewsAdapter);
         mNewsAdapter.notifyDataSetChanged();
 
-        //=====
 
-
+        //=================
+        //RecyclerView - List of long events
         RecyclerView recyclerViewLongEvent = findViewById(R.id.recycler_long_events);
-        recyclerViewLongEvent.setNestedScrollingEnabled(false);
         LinearLayoutManager linearLayoutManagerLongEvent = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
         recyclerViewLongEvent.setLayoutManager(linearLayoutManagerLongEvent);
-        mLongEventAdapter = new LongEventAdapter(new ArrayList<com.dt.anh.doranews.model.result.longevent.Datum>(), this, mId);
-        recyclerViewLongEvent.setAdapter(mLongEventAdapter);
+        recyclerViewLongEvent.setNestedScrollingEnabled(false);
+        NestedScrollView nestedScrollViewLongEvent = findViewById(R.id.nested_scroll_view_detail_event);
+
+        mLongEventAdapter = new LongEventAdapter(mLongEvents, this, mIdEvent, mIdLongEvent,
+                recyclerViewLongEvent, nestedScrollViewLongEvent);
         mLongEventAdapter.notifyDataSetChanged();
 
-        //=====
-
-
-        getDataTransfer();
-//        loadNews();
-//        loadLongEvent();
+        recyclerViewLongEvent.setAdapter(mLongEventAdapter);
     }
 
-
-    private void loadLongEvent(String idLongEvent) {
+    private void loadListLongEvent(String idLongEvent, int numberPage) {
         //Dựa vào idLongEvent, load ra list event thuộc long event
-        mLongEventAdapter.setIdCurrentEvent(mId);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ConstRoot.URL_GET_ROOT)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ServerAPI apiService = retrofit.create(ServerAPI.class);
-        Call<MainDetailLongEvent> call = apiService.getResultLongEvent(idLongEvent);
+        String page = String.valueOf(numberPage);
+        Call<MainDetailLongEvent> call = apiService.getResultLongEvent(idLongEvent, NUMBER_LONG_EVENT_PER_PAGE_STRING, page);
 
         call.enqueue(new Callback<MainDetailLongEvent>() {
             @Override
-            public void onResponse(Call<MainDetailLongEvent> call, Response<MainDetailLongEvent> response) {
+            public void onResponse(@NonNull Call<MainDetailLongEvent> call, @NonNull Response<MainDetailLongEvent> response) {
                 mainDetailLongEvent = response.body();
                 if (mainDetailLongEvent == null) {
                     Toast.makeText(getApplicationContext(), "Failed to load data", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                     return;
                 }
-//                mDatumArrayList = (ArrayList<Datum>) eventResult.getData();
-//                Log.e("API Datum event===", mDatumArrayList.toString());
-//                setUpAdapter(mCategoryListTest);
+                if (mainDetailLongEvent.getData().size() == 0) {
+                    dialog.dismiss();
+                    return;
+                }
+
+                if (mainDetailLongEvent.getData().size() < ConstParamAPI.NUMBER_LONG_EVENT_PER_PAGE) {
+                    //Khi data nhận về nhỏ có size nhỏ hơn Threshold thì chuyển flag = true, tức là sẽ không load tiếp nữa
+                    //Nếu bằng thì tức là load đúng size buffer = 3, tức là vẫn còn mà
+                    mLongEventAdapter.setFlagFinishLoadData(true);
+                }
+                //Kiểm tra xem list hiện tại có chứa ko, có rồi thì reject mnl
+                boolean flag = true;
+
+                for (Datum datum : mLongEvents) {
+                    for (Datum datumCmp : mainDetailLongEvent.getData()) {
+                        if (datum.getId().equals(datumCmp.getId())) {
+                            flag = false;
+                            break;
+                        }
+                    }
+                    if (!flag) {
+                        break;
+                    }
+                }
+                if (!flag) {
+                    return;
+                }
+
+                mLongEvents.addAll(mainDetailLongEvent.getData());
                 mLongEventAdapter.updateListLongEvents(mainDetailLongEvent.getData());
                 dialog.dismiss();
             }
 
             @Override
-            public void onFailure(Call<MainDetailLongEvent> call, Throwable t) {
+            public void onFailure(@NonNull Call<MainDetailLongEvent> call, @NonNull Throwable t) {
                 Toast.makeText(getApplicationContext(), "Failed to load data - onFailure", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });
-        //====
-
-
-//        mLongEventAdapter.updateListLongEvents(LongEventFake.getListLongEvent());
     }
 
     @Override
@@ -249,8 +310,4 @@ public class DetailEventActivity extends AppCompatActivity implements View.OnCli
                 break;
         }
     }
-
-//    private void loadNews() {
-//        mNewsAdapter.updateListEvents(NewsFake.getListNews());
-//    }
 }
