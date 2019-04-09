@@ -13,7 +13,7 @@ public class FireBaseInstanceIDService extends FirebaseInstanceIdService {
     @Override
     public void onTokenRefresh() {
         getToken();
-        Log.d(TAG, "Refreshed token: " + getToken());
+//        Log.d(TAG, "Refreshed token: " + getToken());
     }
 
     public String getToken() {

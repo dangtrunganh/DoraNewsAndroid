@@ -32,6 +32,7 @@ import com.dt.anh.doranews.model.result.longevent.Datum;
 import com.dt.anh.doranews.util.ConstParamAPI;
 import com.dt.anh.doranews.util.ConstParamTransfer;
 import com.dt.anh.doranews.util.ConstRoot;
+import com.dt.anh.doranews.util.UtilTools;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -60,6 +61,8 @@ public class DetailEventActivity extends AppCompatActivity implements View.OnCli
 
     private String mIdLongEvent;
 
+    private String uId;
+
     private final String NUMBER_LONG_EVENT_PER_PAGE_STRING = String.valueOf(ConstParamAPI.NUMBER_LONG_EVENT_PER_PAGE);
 //    private final int START_PAGE = 1;
 
@@ -68,6 +71,9 @@ public class DetailEventActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_event);
+
+        //Lấy uID từ local ra
+        uId = UtilTools.getUId(DetailEventActivity.this);
 
         if (!getDataFromIntent()) {
             return;

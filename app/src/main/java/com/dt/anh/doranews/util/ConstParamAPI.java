@@ -12,10 +12,14 @@ public class ConstParamAPI {
 
     //============Event============
     //Số event hiển thị tại mỗi lần call API list các event ở CategoryFragment
-    public static final int EVENT_THRESHOLD = 10;
+    public static final int EVENT_THRESHOLD = 6; //Cả hot và không hot
 
 
     //============Article============
     //Số article hiển thị tại mỗi lần call API list các article ở AllNewsActivity
-    public static final int ARTICLE_THRESHOLD = 10;
+    public static final int ARTICLE_THRESHOLD_ALL_NEWS_ACT = 6;
+
+    //============ArticleInCategoryFragment============
+    //Số article hiển thị tại mỗi lần call API list các article ở CategoryFragment
+    public static final int ARTICLE_THRESHOLD_CATEGORY_FRG = 4;
 }

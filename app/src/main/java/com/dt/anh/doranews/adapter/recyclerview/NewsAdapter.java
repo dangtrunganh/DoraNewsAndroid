@@ -126,7 +126,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             int position = getAdapterPosition();
 //            Article article = mListNews.get(position);
             Gson gson = new Gson();
-            String json = gson.toJson(mCurrentListNews);
+            String json = gson.toJson(mListNews);
             Intent intent = new Intent(mContext, DetailNewsActivity.class);
             intent.putExtra(ConstParamTransfer.TITLE_EVENT, titleEvent);
             intent.putExtra(ConstParamTransfer.DETAIL_NEWS, json);

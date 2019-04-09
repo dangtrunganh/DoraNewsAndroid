@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,11 +21,25 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/image_cover_fr_detail_news"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:scaleType="centerCrop" />
+                    android:layout_height="200dp">
+
+                    <ImageView
+                        android:id="@+id/image_cover_fr_detail_news"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/image_cover_event"
+                        />
+                    <ImageView
+                        android:id="@+id/image_play_fr_detail_news"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/ic_play_pause_toggle"/>
+
+                </FrameLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -32,8 +47,8 @@
                     android:orientation="vertical"
                     android:paddingLeft="10dp"
 
-                    android:paddingRight="10dp"
-                    android:paddingTop="5dp">
+                    android:paddingTop="5dp"
+                    android:paddingRight="10dp">
 
                     <TextView
                         android:id="@+id/text_fr_title_detail_news"
@@ -87,8 +102,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:layout_marginBottom="10dp"
                         android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
                         android:orientation="horizontal">
 
                         <View
@@ -119,12 +134,5 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/image_play_fr_detail_news"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/ic_big_play_white"
-        tools:ignore="VectorDrawableCompat" />
+
 </RelativeLayout>

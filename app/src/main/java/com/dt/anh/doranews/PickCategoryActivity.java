@@ -11,13 +11,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dt.anh.doranews.adapter.recyclerview.CategoryAdapter;
 import com.dt.anh.doranews.api.ServerAPI;
-import com.dt.anh.doranews.fakedata.CategoriesFake;
 import com.dt.anh.doranews.model.Category;
 import com.dt.anh.doranews.model.result.CategoryAPI;
+import com.dt.anh.doranews.util.ConstParamStorageLocal;
 import com.dt.anh.doranews.util.ConstRoot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -37,7 +36,6 @@ public class PickCategoryActivity extends AppCompatActivity implements View.OnCl
     private RecyclerView mRecyclerPick;
     private CategoryAdapter mCategoryAdapter;
     //    private List<Category> mCategoryList;
-    public static final String PREF_NAME = "data_categories";
     private CategoryAPI mCategoryAPI;
     private ArrayList<Category> mCategoryListTest; //All from api
     private ArrayList<Category> mCategoryListInLocal;
@@ -100,16 +98,16 @@ public class PickCategoryActivity extends AppCompatActivity implements View.OnCl
     private ArrayList<Category> getListCategoriesChosen() {
         ArrayList<Category> categories = new ArrayList<>();
         SharedPreferences pre = getSharedPreferences
-                (PickCategoryActivity.PREF_NAME, MODE_PRIVATE);
-        String json = pre.getString("list_categories", "");
-        if (json.equals("")) {
+                (ConstParamStorageLocal.FILE_NAME_PREF_LIST_CATEGORY, MODE_PRIVATE);
+        String json = pre.getString(ConstParamStorageLocal.KEY_PREF_LIST_CATEGORY, ConstParamStorageLocal.DEFAULT_VALUE_PREF_LIST_CATEGORY_DEFAULT);
+        if (json.equals(ConstParamStorageLocal.DEFAULT_VALUE_PREF_LIST_CATEGORY_DEFAULT)) {
 //            Toast.makeText(this, "Nothing in pref", Toast.LENGTH_SHORT).show();
             return categories;
         }
         Gson gson = new Gson();
         categories = gson.fromJson(json, new TypeToken<List<Category>>() {
         }.getType());
-        Log.e("TAGGGG", categories.toString());
+        Log.e("TAG-ListCategories", categories.toString());
         return categories;
     }
 
@@ -198,7 +196,7 @@ public class PickCategoryActivity extends AppCompatActivity implements View.OnCl
                 }
                 //===
                 //tạo đối tượng getSharedPreferences
-                SharedPreferences pre = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+                SharedPreferences pre = getSharedPreferences(ConstParamStorageLocal.FILE_NAME_PREF_LIST_CATEGORY, MODE_PRIVATE);
                 //tạo đối tượng Editor để lưu thay đổi
                 SharedPreferences.Editor editor = pre.edit();
                 editor.clear();
@@ -206,9 +204,10 @@ public class PickCategoryActivity extends AppCompatActivity implements View.OnCl
                 //Chuyển list về dạng json để lưu xuống
                 Gson gson = new Gson();
                 String json = gson.toJson(categoriesChosen);
-                editor.putString("list_categories", json);
+                editor.putString(ConstParamStorageLocal.KEY_PREF_LIST_CATEGORY, json);
                 //chấp nhận lưu xuống file
                 editor.commit();
+                editor.apply();
                 //3. Navigate tới màn hình MainActivity, trong MainActivity sẽ đọc trc tiên danh sách category này trong
                 //share preference để load lên.
                 startActivity(new Intent(PickCategoryActivity.this, MainActivity.class));

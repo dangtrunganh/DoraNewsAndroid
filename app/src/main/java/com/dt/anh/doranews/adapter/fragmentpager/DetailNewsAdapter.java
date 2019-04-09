@@ -6,10 +6,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.dt.anh.doranews.fragment.DetailNewsInVpFragment;
+
 import java.util.ArrayList;
 
 public class DetailNewsAdapter extends FragmentPagerAdapter {
-    private ArrayList<Fragment> _fragments;
+    private ArrayList<DetailNewsInVpFragment> _fragments;
 
     public DetailNewsAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
@@ -17,11 +19,11 @@ public class DetailNewsAdapter extends FragmentPagerAdapter {
     }
 
 
-    public void add(Fragment fragment) {
+    public void add(DetailNewsInVpFragment fragment) {
         this._fragments.add(fragment);
     }
 
-    public void set_fragments(ArrayList<Fragment> _fragments) {
+    public void set_fragments(ArrayList<DetailNewsInVpFragment> _fragments) {
         this._fragments = _fragments;
     }
 
@@ -33,9 +35,9 @@ public class DetailNewsAdapter extends FragmentPagerAdapter {
 
     // Returns the fragment to display for that page
     @Override
-    public Fragment getItem(int position) {
+    public DetailNewsInVpFragment getItem(int position) {
 
-        Fragment fragment = this._fragments.get(position);
+        DetailNewsInVpFragment fragment = this._fragments.get(position);
 
 
         return fragment;

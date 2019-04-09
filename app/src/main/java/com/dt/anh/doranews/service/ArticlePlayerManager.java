@@ -90,7 +90,7 @@ public class ArticlePlayerManager implements MediaPlayer.OnPreparedListener, Med
             ArticleVoice articleVoice = mCurrentArticleVoices.get(mIndexArticleCurrent);
             mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             try {
-                mPlayer.setDataSource(articleVoice.getUrl());
+                mPlayer.setDataSource(articleVoice.getUrlVoice());
             } catch (IOException e) {
                 nextArticle();
             }

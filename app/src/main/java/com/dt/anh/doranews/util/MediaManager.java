@@ -70,7 +70,7 @@ public class MediaManager implements MediaPlayer.OnCompletionListener {
                 ArticleVoice articleVoice = mArticleVoices.get(mIndex);
 //                mPlayer = MediaPlayer.create(mContext, Uri.parse(articleVoice.getUrl()));
                 mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                mPlayer.setDataSource(articleVoice.getUrl());
+                mPlayer.setDataSource(articleVoice.getUrlVoice());
 //                mPlayer.setDataSource(mContext, Uri.parse(articleVoice.getUrl()));
 
                 mPlayer.prepare();

@@ -1,12 +1,17 @@
 package com.dt.anh.doranews.fragment;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -30,6 +35,7 @@ import com.dt.anh.doranews.model.result.eventresult.Datum;
 import com.dt.anh.doranews.model.result.eventresult.EventResult;
 import com.dt.anh.doranews.util.ConstParamAPI;
 import com.dt.anh.doranews.util.ConstRoot;
+import com.dt.anh.doranews.util.UtilTools;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -56,6 +62,16 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
     int maxNumber = 0;
     private ProgressDialog dialog;
     private RecyclerView recyclerViewEvents;
+    private RecyclerView recyclerViewNews;
+    private SwipeRefreshLayout swipeContainer;
+    private TextView tvViewAll;
+
+    private TextView tvArticleTitle;
+    private TextView tvEventTitle;
+    private TextView tvTextNoNetwork;
+
+    //    private long oldTime = System.currentTimeMillis();
+    private long oldTime = -1;
 
     public CategoryFragment() {
     }
@@ -83,46 +99,42 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
         mArticleAdapter = new NewsInCategoryFrgAdapter(new ArrayList<>(), getActivity(), getType());
     }
 
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
     @Override
     protected void initializeComponents() {
         View view = getView();
         if (view == null) {
             return;
         }
+        swipeContainer = getView().findViewById(R.id.swipeContainer_frg_event);
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
         recyclerViewEvents = getView().findViewById(R.id.recycler_event);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.VERTICAL, false);
         linearLayoutManager.setAutoMeasureEnabled(true);
         recyclerViewEvents.setLayoutManager(linearLayoutManager);
+        ViewCompat.setNestedScrollingEnabled(recyclerViewEvents, false);
+
         recyclerViewEvents.setNestedScrollingEnabled(false);
         recyclerViewEvents.setHasFixedSize(false);
+//        recyclerViewEvents.= true;
 
         NestedScrollView nestedScrollView = getView().findViewById(R.id.nested_scroll_view);
         mEventAdapter = new EventAdapter(mDatumArrayList, getActivity(), recyclerViewEvents, nestedScrollView);
         recyclerViewEvents.setAdapter(mEventAdapter);
-        loadEvent(ConstParamAPI.START_PAGE); //1
-
-        mEventAdapter.setLoadMore(() -> {
-            if (mEventAdapter.isFlagLoadContinue()) {
-                return;
-            }
-            mDatumArrayList.add(null);
-            mEventAdapter.notifyItemInserted(mDatumArrayList.size() - 1);
-            new Handler().postDelayed(() -> {
-                mDatumArrayList.remove(mDatumArrayList.size() - 1);
-                mEventAdapter.notifyItemRemoved(mDatumArrayList.size());
-
-                double thresHold = ConstParamAPI.EVENT_THRESHOLD * 1.0;
-                int index = (int) (Math.ceil(mDatumArrayList.size() / thresHold)) + 1;
-                if (index > 1 && (!mEventAdapter.isFlagLoadContinue())) {
-                    loadEvent(index);
-                }
-            }, 2000); // Time to load
-        });
-
 
         //==============
-        RecyclerView recyclerViewNews = getView().findViewById(R.id.recycler_news_frg_event);
+        recyclerViewNews = getView().findViewById(R.id.recycler_news_frg_event);
         recyclerViewNews.setNestedScrollingEnabled(false);
         LinearLayoutManager linearLayoutManagerX = new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.HORIZONTAL, false);
@@ -130,47 +142,101 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
 
         recyclerViewNews.setAdapter(mArticleAdapter);
         mArticleAdapter.notifyDataSetChanged();
-        loadNews();
+        tvViewAll = getView().findViewById(R.id.tv_all_news_frg_event);
+        tvArticleTitle = getView().findViewById(R.id.text_articles_title);
+        tvEventTitle = getView().findViewById(R.id.text_event_title);
+        tvTextNoNetwork = getView().findViewById(R.id.text_no_network);
 
-        TextView tvViewAll = getView().findViewById(R.id.tv_all_news_frg_event);
-        tvViewAll.setOnClickListener(this);
+        loadDataMain();
+
+        // Lookup the swipe container view
+        // Setup refresh listener which triggers new data loading
+        // Your code to refresh the list here.
+        // Make sure you call swipeContainer.setRefreshing(false)
+        // once the network request has completed successfully.
+        swipeContainer.setOnRefreshListener(this::loadDataMain);
     }
 
-    private void loadNews() {
-        String type = getType();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConstRoot.URL_GET_ROOT)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        ServerAPI apiService = retrofit.create(ServerAPI.class);
+    private void loadDataMain() {
+        //load event
+        if (isNetworkAvailable()) {
+            // do network operation here
+            //Co mang thi moi co loadmore
+            tvArticleTitle.setVisibility(View.VISIBLE);
+            tvEventTitle.setVisibility(View.VISIBLE);
+            recyclerViewNews.setVisibility(View.VISIBLE);
+            recyclerViewEvents.setVisibility(View.VISIBLE);
+            tvTextNoNetwork.setVisibility(View.GONE);
 
-        //Khong hot
-        //Mặc định load 1 trang đầu thôi, vì đây là vuốt ngang
-        Call<ArticleResult> call = apiService.getResultArticle(type, "1");
-
-        call.enqueue(new Callback<ArticleResult>() {
-            @Override
-            public void onResponse(@NonNull Call<ArticleResult> call, @NonNull Response<ArticleResult> response) {
-                articleResult = response.body();
-                if (articleResult == null) {
-                    Toast.makeText(getContext(), "Failed to load data articles", Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
+            //display nút xem tất cả đi
+            tvViewAll.setVisibility(View.VISIBLE);
+            //===
+            loadEvent(ConstParamAPI.START_PAGE); //1
+            mEventAdapter.setLoadMore(() -> {
+                if (mEventAdapter.isFlagLoadContinue()) {
                     return;
                 }
-                mArticleArrayList = (ArrayList<Article>) articleResult.getArticles();
-//                Log.e("API article===", mArticleArrayList.toString());
-//                setUpAdapter(mCategoryListTest);
-                mArticleAdapter.updateListArticles(mArticleArrayList);
-                dialog.dismiss();
+                mDatumArrayList.add(null);
+                mEventAdapter.notifyItemInserted(mDatumArrayList.size() - 1);
+                new Handler().postDelayed(() -> {
+                    mDatumArrayList.remove(mDatumArrayList.size() - 1);
+                    mEventAdapter.notifyItemRemoved(mDatumArrayList.size());
+
+                    double thresHold = ConstParamAPI.EVENT_THRESHOLD * 1.0;
+                    int index = (int) (Math.ceil(mDatumArrayList.size() / thresHold)) + 1;
+                    if (index > 1 && (!mEventAdapter.isFlagLoadContinue())) {
+                        loadEvent(index);
+                    }
+                }, 2000); // Time to load
+            });
+
+            //load article
+            loadNews();
+
+            //Có mạng thì mới kích xem tất cả được
+            tvViewAll.setOnClickListener(this);
+        } else if (getIsHot()) {
+            //Không có mạng thì ko có load more
+            //Không có mạng với tabHost
+            tvTextNoNetwork.setVisibility(View.GONE);
+            Toast.makeText(getContext(), "No Available Network. Offline mode is on!", Toast.LENGTH_LONG).show();
+//            return;
+            //Load local event
+            ArrayList<Datum> arrayListEvent = UtilTools.getListEvent(getContext());
+            if (arrayListEvent.size() != 0) {
+                loadLocalEventToOfflineMode(arrayListEvent);
             }
 
-            @Override
-            public void onFailure(@NonNull Call<ArticleResult> call, @NonNull Throwable t) {
-                Toast.makeText(getContext(), "Failed to load data - onFailure articles", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-            }
-        });
 
+            //Load local articles
+            ArrayList<Article> articles = UtilTools.getListArticle(getContext());
+            if (articles.size() != 0) {
+                loadLocalArticleToOfflineMode(articles);
+            }
+            swipeContainer.setRefreshing(false);
+            dialog.dismiss();
+        } else {
+            //Không có mạng với các tab khác
+            //Tạm thời disable hết các list + text view đi
+            tvArticleTitle.setVisibility(View.GONE);
+            tvEventTitle.setVisibility(View.GONE);
+            recyclerViewNews.setVisibility(View.GONE);
+            recyclerViewEvents.setVisibility(View.GONE);
+            tvTextNoNetwork.setVisibility(View.VISIBLE);
+
+            //display nút xem tất cả đi
+            tvViewAll.setVisibility(View.GONE);
+            swipeContainer.setRefreshing(false);
+            dialog.dismiss();
+        }
+    }
+
+    private void loadLocalEventToOfflineMode(ArrayList<Datum> arrayList) {
+        mEventAdapter.updateListEvents(arrayList);
+    }
+
+    private void loadLocalArticleToOfflineMode(ArrayList<Article> articles) {
+        mArticleAdapter.updateListArticles(articles);
     }
 
     private String getType() {
@@ -197,6 +263,55 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
         return getArguments().getBoolean(PARAM_HOT_EVENT);
     }
 
+    private void loadNews() {
+        String type = getType();
+        Log.e("tt-type", type);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ConstRoot.URL_GET_ROOT)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ServerAPI apiService = retrofit.create(ServerAPI.class);
+
+        //Khong hot thì type là ""
+        //Mặc định load 1 trang đầu thôi, vì đây là vuốt ngang
+//        String initPage = String.valueOf(ConstParamAPI.START_PAGE);
+        Call<ArticleResult> call = apiService.getResultArticle(type,
+                String.valueOf(ConstParamAPI.START_PAGE),
+                String.valueOf(ConstParamAPI.ARTICLE_THRESHOLD_CATEGORY_FRG));
+
+        call.enqueue(new Callback<ArticleResult>() {
+            @Override
+            public void onResponse(@NonNull Call<ArticleResult> call, @NonNull Response<ArticleResult> response) {
+                articleResult = response.body();
+                if (articleResult == null) {
+                    Toast.makeText(getContext(), "Failed to load data articles", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                    swipeContainer.setRefreshing(false);
+                    return;
+                }
+                mArticleArrayList = (ArrayList<Article>) articleResult.getArticles();
+                mArticleAdapter.updateListArticles(mArticleArrayList);
+
+                if (getType().equals("")) {
+                    //Lưu xuống cache
+                    UtilTools.storeArticle(Objects.requireNonNull(getContext()), mArticleArrayList);
+//                    Toast.makeText(getContext(), "Stored data article!", Toast.LENGTH_SHORT).show();
+                }
+
+                dialog.dismiss();
+                swipeContainer.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ArticleResult> call, @NonNull Throwable t) {
+//                Toast.makeText(getContext(), "Failed to load data - onFailure articles", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                swipeContainer.setRefreshing(false);
+            }
+        });
+
+    }
+
     private void loadEvent(int numberPage) {
         //Dựa vào getType() đưa ra load loại event tương ứng
         String type = getType();
@@ -210,7 +325,7 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
         if (!getIsHot()) {
             //Khong hot
             String page = String.valueOf(numberPage);
-            Call<EventResult> call = apiService.getResultEvent(type, page);
+            Call<EventResult> call = apiService.getResultEvent(type, page, String.valueOf(ConstParamAPI.EVENT_THRESHOLD));
 
             call.enqueue(new Callback<EventResult>() {
                 @Override
@@ -237,8 +352,9 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
             });
         } else {
             //hot
+            //Chỉ lưu hot xuống cache
             String page = String.valueOf(numberPage);
-            Call<EventResult> call = apiService.getHotEvent("true", page);
+            Call<EventResult> call = apiService.getHotEvent("true", page, String.valueOf(ConstParamAPI.EVENT_THRESHOLD));
 
             call.enqueue(new Callback<EventResult>() {
                 @Override
@@ -255,6 +371,13 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
                     if (eventResult.getData().size() < ConstParamAPI.EVENT_THRESHOLD) {
                         mEventAdapter.setFlagLoadContinue(true);
                     }
+
+                    //Thỏa mãn, lưu vào cache, với page == 1 thì lưu
+                    if (numberPage == 1) {
+                        UtilTools.storeEvent(Objects.requireNonNull(getContext()), eventResult.getData());
+//                        Toast.makeText(getContext(), "Stored data event!", Toast.LENGTH_SHORT).show();
+                    }
+                    //===
                     mEventAdapter.updateListEvents(eventResult.getData());
                 }
 
@@ -264,7 +387,6 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
                 }
             });
         }
-
     }
 
     @Override

@@ -6,9 +6,12 @@ import com.dt.anh.doranews.model.result.articleresult.ArticleResult;
 import com.dt.anh.doranews.model.result.eventdetailresult.EventDetailMainResult;
 import com.dt.anh.doranews.model.result.eventresult.EventResult;
 import com.dt.anh.doranews.model.result.longevent.MainDetailLongEvent;
+import com.dt.anh.doranews.model.result.userresult.UserResult;
 
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -21,10 +24,14 @@ public interface ServerAPI {
     Call<CategoryAPI> getResultCategory();
 
     @GET("events")
-    Call<EventResult> getResultEvent(@Query("category") String category, @Query("page") String page);
+    Call<EventResult> getResultEvent(@Query("category") String category,
+                                     @Query("page") String page,
+                                     @Query("per_page") String perPage);
 
     @GET("events")
-    Call<EventResult> getHotEvent(@Query("hot") String isHot, @Query("page") String page);
+    Call<EventResult> getHotEvent(@Query("hot") String isHot,
+                                  @Query("page") String page,
+                                  @Query("per_page") String perPage);
 
     @GET("events/{id}")
     Call<EventDetailMainResult> getResultEventDetail(
@@ -41,12 +48,16 @@ public interface ServerAPI {
 
     @GET("articles")
     Call<ArticleResult> getResultArticle(@Query("category") String category,
-                                         @Query("page") String page);
+                                         @Query("page") String page,
+                                         @Query("per_page") String perPage);
 
-    @Multipart
-    @POST("login")
-    Call<String> login(@Part("uid") RequestBody uID,
-                       @Part("username") RequestBody userName,
-                       @Part("email") RequestBody email,
-                       @Part("token") RequestBody token);
+//    @Multipart
+//    @POST("login")
+//    Call<String> login(@Body("uid") RequestBody uID,
+//                       /*@Part("username") RequestBody userName,
+//                       @Part("email") RequestBody email,*/
+//                       @Body("token") RequestBody token);
+
+    @POST("active")
+    Call<UserResult> login(@Body RequestBody body);
 }
