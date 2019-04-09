@@ -30,7 +30,8 @@
         android:layout_gravity="center"
         android:layout_marginBottom="20dp"
         android:maxLines="3"
-        android:paddingHorizontal="30dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
         android:textColor="@android:color/white"
         android:textSize="22sp"
         android:textStyle="italic|bold" />
@@ -42,22 +43,26 @@
         android:layout_marginBottom="10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="10dp">
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        >
 
         <TextView
             android:id="@+id/text_category_detail_event"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#455fbc"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="5dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical|right"
+            android:gravity="center_vertical|end"
             android:orientation="horizontal">
 
             <ImageView

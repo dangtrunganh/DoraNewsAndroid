@@ -1,20 +1,16 @@
 package com.dt.anh.doranews;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.support.v7.app.ActionBar;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -66,7 +62,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         dialog = new ProgressDialog(this);
         dialog.setMessage("Loading..");
         dialog.setCancelable(false);
-//        user = MainActivity.userMainAct;
 
         String category_slug = "phap-luat";
         String category = "Pháp luật";
@@ -77,7 +72,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerViewArticles.setLayoutManager(layoutManager);
         mNewsAllAdapter2.notifyDataSetChanged();
-
 
         searchView.setOnQueryTextListener(this);
     }
@@ -150,7 +144,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         }
         mArticleArrayList = new ArrayList<>();
         mNewsAllAdapter2.resetListArticle();
-        Log.e("TYPEEEE-slug", type);
+//        Log.e("TYPEEEE-slug", type);
         String page = String.valueOf(numberPage);
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -160,11 +154,11 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         ServerAPI apiService = retrofit.create(ServerAPI.class);
 
         //Khong hot
-        Call<ArticleResult> call = apiService.getResultArticle(type, page);
+        Call<ArticleResult> call = apiService.getResultArticle(type, page, String.valueOf(ConstParamAPI.ARTICLE_THRESHOLD_ALL_NEWS_ACT));
 
         call.enqueue(new Callback<ArticleResult>() {
             @Override
-            public void onResponse(Call<ArticleResult> call, Response<ArticleResult> response) {
+            public void onResponse(@NonNull Call<ArticleResult> call, @NonNull Response<ArticleResult> response) {
                 articleResult = response.body();
                 if (articleResult == null) {
                     Toast.makeText(getApplicationContext(), "Failed to load data articles", Toast.LENGTH_SHORT).show();
@@ -173,16 +167,12 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     }
                     return;
                 }
-//                mArticlesArrayList = (ArrayList<Article>) articleResult.getArticles();
-//                Log.e("API article===", mArticlesArrayList.toString());
-////                setUpAdapter(mCategoryListTest);
-//                mNewsAllAdapter2.updateListArticles(mArticlesArrayList);
 
                 if (articleResult.getArticles().size() == 0) {
                     return;
                 }
 
-                if (articleResult.getArticles().size() < ConstParamAPI.ARTICLE_THRESHOLD) {
+                if (articleResult.getArticles().size() < ConstParamAPI.ARTICLE_THRESHOLD_ALL_NEWS_ACT) {
                     mNewsAllAdapter2.setFlagLoadContinue(true);
                 }
                 mNewsAllAdapter2.updateListArticles(articleResult.getArticles());
@@ -192,7 +182,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             }
 
             @Override
-            public void onFailure(Call<ArticleResult> call, Throwable t) {
+            public void onFailure(@NonNull Call<ArticleResult> call, @NonNull Throwable t) {
                 Toast.makeText(getApplicationContext(), "Failed to load data - onFailure articles", Toast.LENGTH_SHORT).show();
                 if (numberPage == 1) {
                     dialog.dismiss();

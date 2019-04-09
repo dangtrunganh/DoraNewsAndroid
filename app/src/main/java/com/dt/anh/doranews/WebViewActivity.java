@@ -53,21 +53,19 @@ public class WebViewActivity extends AppCompatActivity {
     }
 
     private void loadLink() {
-        String urll = "https://baomoi.com/thua-dau-indonesia-hlv-u22-viet-nam-chi-trich-trong-tai/r/29768439.epi";
+        String urll = "https://baomoi.com/thua-dau-indonesia-hlv-u22-viet-nam-chi-trich-trong-tai/c/29768439.epi";
         Intent intent = getIntent();
         if (intent != null) {
             urll = intent.getStringExtra(DetailNewsInVpFragment.PARAM_URL_NEWS);
+            urll = urll.replace("/r/", "/c/");
             if (urll == null) {
-                urll = "https://baomoi.com/thua-dau-indonesia-hlv-u22-viet-nam-chi-trich-trong-tai/r/29768439.epi";
+                urll = "https://baomoi.com/thua-dau-indonesia-hlv-u22-viet-nam-chi-trich-trong-tai/c/29768439.epi";
             }
         } else {
             Toast.makeText(this, "Error, nothing in intent url news", Toast.LENGTH_SHORT).show();
             return;
         }
-
-
         webView.loadUrl(urll);
-
     }
 
     private class MyBrowser extends WebViewClient {

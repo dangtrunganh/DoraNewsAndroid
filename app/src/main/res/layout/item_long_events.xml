@@ -44,7 +44,7 @@
                     android:id="@+id/txt_title_long_events"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:layout_weight="70"
                     android:gravity="left"
                     android:lineSpacingExtra="8dp"

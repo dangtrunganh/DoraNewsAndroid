@@ -1,19 +1,12 @@
 package com.dt.anh.doranews;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -33,20 +26,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dt.anh.doranews.adapter.viewpager.CategoryViewPagerAdapter;
-import com.dt.anh.doranews.fakedata.CategoriesFake;
 import com.dt.anh.doranews.fragment.CategoryFragment;
-import com.dt.anh.doranews.fragment.DetailNewsInVpFragment;
 import com.dt.anh.doranews.model.Category;
-import com.dt.anh.doranews.model.News;
 import com.dt.anh.doranews.model.result.eventdetailresult.Article;
 import com.dt.anh.doranews.notification.NotificationAction;
 import com.dt.anh.doranews.service.ArticlePlayerService;
 import com.dt.anh.doranews.service.StateLevel;
 import com.dt.anh.doranews.service.servicefirebase.FireBaseInstanceIDService;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.dt.anh.doranews.util.ConstParamStorageLocal;
+import com.dt.anh.doranews.util.ConstParamTransfer;
+import com.dt.anh.doranews.util.UtilTools;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -91,8 +81,30 @@ public class MainActivity extends AppCompatActivity
 //        addSoundCloudFragment();
         boundService();
         getIntentFromNotification();
-        fireBaseSetUp();
+//        fireBaseSetUp();
 //        tokenFireBaseServices();
+
+        //====GetIntent từ EmptyActivity để load sang màn hình DetailEventAcitivty (nếu có)=====
+        getIntentFromEmptyAct();
+    }
+
+    private void getIntentFromEmptyAct() {
+        Intent result = getIntent();
+        if (result == null) {
+            return;
+        }
+        String idEvent = result.getStringExtra(ConstParamTransfer.TRANSFER_EVENT_ID_FR_EMPTY_TO_MAIN);
+        String idLongEvent = result.getStringExtra(ConstParamTransfer.TRANSFER_LONG_EVENT_ID_FR_EMPTY_TO_MAIN);
+        if (idEvent == null || idLongEvent == null) {
+            return;
+        }
+        if (idEvent.equals("") || idLongEvent.equals("")) {
+            return;
+        }
+        Intent intentToDetailEventAct = new Intent(MainActivity.this, DetailEventActivity.class);
+        intentToDetailEventAct.putExtra(ConstParamTransfer.PARAM_ID_EVENT, idEvent);
+        intentToDetailEventAct.putExtra(ConstParamTransfer.PARAM_ID_LONG_EVENT, idLongEvent);
+        startActivity(intentToDetailEventAct);
     }
 
     //    private void addSoundCloudFragment() {
@@ -130,7 +142,7 @@ public class MainActivity extends AppCompatActivity
 //                        String msg = getString(R.string.msg_token_fmt, token);
                     String msg = token;
                     Log.d("Mess-XXX", msg);
-                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show(); //mainn
                 });
     }
 
@@ -174,9 +186,10 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<Category> getListCategoriesChosen() {
         ArrayList<Category> categories = new ArrayList<>();
         SharedPreferences pre = getSharedPreferences
-                (PickCategoryActivity.PREF_NAME, MODE_PRIVATE);
-        String json = pre.getString("list_categories", "");
-        if (json.equals("")) {
+                (ConstParamStorageLocal.FILE_NAME_PREF_LIST_CATEGORY, MODE_PRIVATE);
+        String json = pre.getString(ConstParamStorageLocal.KEY_PREF_LIST_CATEGORY,
+                ConstParamStorageLocal.DEFAULT_VALUE_PREF_LIST_CATEGORY_DEFAULT);
+        if (json.equals(ConstParamStorageLocal.DEFAULT_VALUE_PREF_LIST_CATEGORY_DEFAULT)) {
             Toast.makeText(this, "Nothing in pref", Toast.LENGTH_SHORT).show();
             return categories;
         }
@@ -236,11 +249,8 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            SharedPreferences pre = getSharedPreferences
-                    (PickCategoryActivity.PREF_NAME, MODE_PRIVATE);
-            SharedPreferences.Editor editor = pre.edit();
-            editor.clear();
-            editor.apply();
+            UtilTools.clearCacheCategory(MainActivity.this);
+            UtilTools.clearCacheUId(MainActivity.this);
             Toast.makeText(this, "Clear cache!", Toast.LENGTH_SHORT).show();
             return true;
         }

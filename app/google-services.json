@@ -1,58 +1,27 @@
 {
   "project_info": {
-    "project_number": "240786679829",
-    "firebase_url": "https://doranews-c0416.firebaseio.com",
-    "project_id": "doranews-c0416",
-    "storage_bucket": "doranews-c0416.appspot.com"
+    "project_number": "13003580547",
+    "firebase_url": "https://dora-news.firebaseio.com",
+    "project_id": "dora-news",
+    "storage_bucket": "dora-news.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:240786679829:android:fde05eea913eebc9",
+        "mobilesdk_app_id": "1:13003580547:android:fde05eea913eebc9",
         "android_client_info": {
           "package_name": "com.dt.anh.doranews"
         }
       },
       "oauth_client": [
         {
-          "client_id": "240786679829-ott3l8j0go2mgnsv0qbqcppasjs6qig7.apps.googleusercontent.com",
+          "client_id": "13003580547-i7ml48p65a51vca29vgkia5n0ip6qjh4.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCNZ6aBSehLRdBLjvhxKK6C57kPLTKaKx8"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:240786679829:android:d4a5947564422b27",
-        "android_client_info": {
-          "package_name": "com.news.dora"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "240786679829-ott3l8j0go2mgnsv0qbqcppasjs6qig7.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCNZ6aBSehLRdBLjvhxKK6C57kPLTKaKx8"
+          "current_key": "AIzaSyAKiymBLFRTmF3RMGlFeRNfAQat3KVyt6w"
         }
       ],
       "services": {

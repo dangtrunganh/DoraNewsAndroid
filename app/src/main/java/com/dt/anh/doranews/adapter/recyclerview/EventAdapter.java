@@ -72,9 +72,26 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 //        this.isAnimation = true;
 
-        if (!flagLoadContinue) {
+        if (!flagLoadContinue) { //flagLoadContinue == true tức là còn nữa, load tiếp ><
             //animate
             nestedScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+                int first = linearLayoutManager.findFirstVisibleItemPosition();
+                Log.e("mp-First: ", String.valueOf(first));
+
+                int firstComplete = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
+                Log.e("mp-First complete: ", String.valueOf(firstComplete));
+
+                int last = linearLayoutManager.findLastVisibleItemPosition();
+                Log.e("mp-Last: ", String.valueOf(last));
+
+                int lastComplete = linearLayoutManager.findLastCompletelyVisibleItemPosition();
+                Log.e("mp-Last complete: ", String.valueOf(lastComplete));
+
+//                Log.e("mp-scrollX", String.valueOf(scrollX));
+//                Log.e("mp-scrollY", String.valueOf(scrollY));
+//                Log.e("mp-oldScrollX", String.valueOf(oldScrollX));
+//                Log.e("mp-oldScrollY", String.valueOf(oldScrollY));
+                Log.e("mp-====end====", "===end===");
                 if (v.getChildAt(v.getChildCount() - 1) != null) {
                     if ((scrollY >= (v.getChildAt(v.getChildCount() - 1).getMeasuredHeight() - v.getMeasuredHeight())) &&
                             scrollY > oldScrollY) {

@@ -25,6 +25,7 @@ import com.dt.anh.doranews.adapter.fragmentpager.DetailNewsAdapter;
 import com.dt.anh.doranews.adapter.recyclerview.NewsInCategoryFrgAdapter;
 import com.dt.anh.doranews.fakedata.NewsFake;
 import com.dt.anh.doranews.fragment.DetailNewsInVpFragment;
+import com.dt.anh.doranews.model.ArticleLibrary;
 import com.dt.anh.doranews.model.Category;
 import com.dt.anh.doranews.model.News;
 import com.dt.anh.doranews.model.result.eventdetailresult.Article;
@@ -47,13 +48,13 @@ public class DetailNewsActivity extends AppCompatActivity implements ArticlePlay
     private CircleIndicator indicator;
 
     private ArrayList<Article> mArrayNews;
-    private MediaManager mMediaManager;
+//    private MediaManager mMediaManager;
     int position = 0;
 //    private ProgressDialog dialog;
 
-    private ArticlePlayerService mPlayerService;
-    private ServiceConnection mConnection;
-    private boolean mIsConnect;
+//    private ArticlePlayerService mPlayerService;
+//    private ServiceConnection mConnection;
+//    private boolean mIsConnect;
     private LinearLayout mSmallControlView;
     private ImageView mImagePlaySmall;
     private ImageView mImagePlayPrevious;
@@ -66,7 +67,7 @@ public class DetailNewsActivity extends AppCompatActivity implements ArticlePlay
         setContentView(R.layout.acitivity_detail_news);
 
         initViews();
-        boundService();
+//        boundService();
         getIntentFromNotification();
 //        updateUI();
     }
@@ -98,66 +99,66 @@ public class DetailNewsActivity extends AppCompatActivity implements ArticlePlay
         startActivity(intent);
     }
 
+//
+//    private void updateUI() {
+//        this.runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                mImagePlaySmall.setImageLevel(getLevelImagePlay());
+//                mTextTitleArticle
+//                        .setText(getCurrentArticle().getTitle());
+//
+//
+////                mTextTitle.setText(getCurrentSong().getTitle());
+////                mTextArtist.setText(getCurrentSong().getUsername());
+////                loadSongAvatar(mImageSong, getCurrentSong());
+////                setViewForButton();
+//            }
+//        });
+//    }
 
-    private void updateUI() {
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mImagePlaySmall.setImageLevel(getLevelImagePlay());
-                mTextTitleArticle
-                        .setText(getCurrentArticle().getTitle());
+//    public Article getCurrentArticle() {
+//        return mPlayerService.getCurrentArticle();
+//    }
 
+//    private int getLevelImagePlay() {
+//        if (mPlayerService == null) {
+//            return StateLevel.PLAY;
+//        }
+//        if (mPlayerService.isOnlyPlaying()) {
+//            return StateLevel.PAUSE;
+//        }
+//
+//        return StateLevel.PLAY;
+//    }
 
-//                mTextTitle.setText(getCurrentSong().getTitle());
-//                mTextArtist.setText(getCurrentSong().getUsername());
-//                loadSongAvatar(mImageSong, getCurrentSong());
-//                setViewForButton();
-            }
-        });
-    }
-
-    public Article getCurrentArticle() {
-        return mPlayerService.getCurrentArticle();
-    }
-
-    private int getLevelImagePlay() {
-        if (mPlayerService == null) {
-            return StateLevel.PLAY;
-        }
-        if (mPlayerService.isOnlyPlaying()) {
-            return StateLevel.PAUSE;
-        }
-
-        return StateLevel.PLAY;
-    }
-
-    private void boundService() {
-        mConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                if (iBinder instanceof ArticlePlayerService.ArticleBinder) {
-                    mIsConnect = true;
-                    mPlayerService = ((ArticlePlayerService.ArticleBinder) iBinder).getService();
-                    mPlayerService.setArticlesList(mArrayNews);
-                    if (mPlayerService == null) {
-                        Log.e("mPlayerService", "NULL");
-                    }
-                    mPlayerService.setListenerActivity(DetailNewsActivity.this);
-                    updateUI();
-                } else {
-                    mIsConnect = false;
-                }
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-                mIsConnect = false;
-            }
-        };
-
-        Intent intent = new Intent(this, ArticlePlayerService.class);
-        bindService(intent, mConnection, Service.BIND_AUTO_CREATE);
-    }
+//    private void boundService() {
+//        mConnection = new ServiceConnection() {
+//            @Override
+//            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+//                if (iBinder instanceof ArticlePlayerService.ArticleBinder) {
+//                    mIsConnect = true;
+//                    mPlayerService = ((ArticlePlayerService.ArticleBinder) iBinder).getService();
+//                    mPlayerService.setArticlesList(mArrayNews);
+//                    if (mPlayerService == null) {
+//                        Log.e("mPlayerService", "NULL");
+//                    }
+//                    mPlayerService.setListenerActivity(DetailNewsActivity.this);
+//                    updateUI();
+//                } else {
+//                    mIsConnect = false;
+//                }
+//            }
+//
+//            @Override
+//            public void onServiceDisconnected(ComponentName componentName) {
+//                mIsConnect = false;
+//            }
+//        };
+//
+//        Intent intent = new Intent(this, ArticlePlayerService.class);
+//        bindService(intent, mConnection, Service.BIND_AUTO_CREATE);
+//    }
 
     private void initViews() {
         //getData
@@ -183,19 +184,22 @@ public class DetailNewsActivity extends AppCompatActivity implements ArticlePlay
         }.getType());
         Log.e("popo", mArrayNews.toString());
 
+        //=====
+        ArticleLibrary.currentArticles = mArrayNews;
 
 
-        mMediaManager = new MediaManager(this, mArrayNews);
+//        mMediaManager = new MediaManager(this, mArrayNews);
         //===
 //        mArrayNews = NewsFake.getListNews();
         vpgNews = findViewById(R.id.vpg_news_detail_news);
         indicator = findViewById(R.id.indicator_detail_news);
         mDetailNewsAdapter = new DetailNewsAdapter(getSupportFragmentManager());
-        ArrayList<Fragment> fragments = new ArrayList<>();
+
+        ArrayList<DetailNewsInVpFragment> fragments = new ArrayList<>();
         for (int i = 0; i < mArrayNews.size(); i++) {
             Article news = mArrayNews.get(i);
             String jsonNews = gson.toJson(news);
-            Fragment fragment = DetailNewsInVpFragment.newInstance(jsonNews, mMediaManager, i, DetailNewsActivity.this);
+            DetailNewsInVpFragment fragment = DetailNewsInVpFragment.newInstance(jsonNews/*, mMediaManager*/, i, DetailNewsActivity.this);
             fragments.add(fragment);
         }
         mDetailNewsAdapter.set_fragments(fragments);
@@ -274,8 +278,8 @@ public class DetailNewsActivity extends AppCompatActivity implements ArticlePlay
 
     @Override
     protected void onDestroy() {
-        unbindService(mConnection);
-        mIsConnect = false;
+//        unbindService(mConnection);
+//        mIsConnect = false;
         super.onDestroy();
     }
 
@@ -283,45 +287,45 @@ public class DetailNewsActivity extends AppCompatActivity implements ArticlePlay
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.image_play_control_music:
-                changeStateFromDetailMusic();
+//                changeStateFromDetailMusic();
                 break;
             case R.id.image_previous_control_music:
-                previousFromDetailMusic();
+//                previousFromDetailMusic();
                 break;
             case R.id.image_next_control_music:
-                nextFromDetailMusic();
+//                nextFromDetailMusic();
                 break;
             default:
                 break;
         }
     }
 
-    private void changeStateFromDetailMusic() {
-        if (!mIsConnect) {
-            return;
-        }
-        mPlayerService.playArticle();
-        if (mPlayerService.isOnlyPlaying()) {
-            mImagePlaySmall.setImageLevel(StateLevel.PAUSE);
-            return;
-        }
-        mImagePlaySmall.setImageLevel(StateLevel.PLAY);
-    }
-
-    private void previousFromDetailMusic() {
-        if (!mIsConnect) {
-            return;
-        }
-        mPlayerService.previousArticle();
-        mImagePlaySmall.setImageLevel(StateLevel.PAUSE);
-    }
-
-    private void nextFromDetailMusic() {
-        if (!mIsConnect) {
-            return;
-        }
-        mPlayerService.nextArticle();
-        mImagePlaySmall.setImageLevel(StateLevel.PAUSE);
-    }
+//    private void changeStateFromDetailMusic() {
+//        if (!mIsConnect) {
+//            return;
+//        }
+//        mPlayerService.playArticle();
+//        if (mPlayerService.isOnlyPlaying()) {
+//            mImagePlaySmall.setImageLevel(StateLevel.PAUSE);
+//            return;
+//        }
+//        mImagePlaySmall.setImageLevel(StateLevel.PLAY);
+//    }
+//
+//    private void previousFromDetailMusic() {
+//        if (!mIsConnect) {
+//            return;
+//        }
+//        mPlayerService.previousArticle();
+//        mImagePlaySmall.setImageLevel(StateLevel.PAUSE);
+//    }
+//
+//    private void nextFromDetailMusic() {
+//        if (!mIsConnect) {
+//            return;
+//        }
+//        mPlayerService.nextArticle();
+//        mImagePlaySmall.setImageLevel(StateLevel.PAUSE);
+//    }
 }
 

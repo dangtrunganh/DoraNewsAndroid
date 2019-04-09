@@ -14,12 +14,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.dt.anh.doranews.DetailEventActivity;
 import com.dt.anh.doranews.DetailNewsActivity;
 import com.dt.anh.doranews.R;
-import com.dt.anh.doranews.model.result.articleresult.ArticleResult;
 import com.dt.anh.doranews.model.result.eventdetailresult.Article;
-import com.dt.anh.doranews.model.result.eventresult.Datum;
+import com.dt.anh.doranews.util.ConstParamAPI;
 import com.dt.anh.doranews.util.ConstParamTransfer;
 import com.google.gson.Gson;
 
@@ -32,7 +30,7 @@ public class NewsInCategoryFrgAdapter extends RecyclerView.Adapter<NewsInCategor
     private LayoutInflater mLayoutInflater;
     private Context mContext;
     private String articleName;
-    public static final int VISIBLETHRESHOLD = 4;
+//    public static final int VISIBLETHRESHOLD = 4;
     public static final String POSITION_CLICK = "POSITION_CLICK";
 
     public NewsInCategoryFrgAdapter(List<Article> mListArticles, Context mContext, String articleName) {
@@ -104,11 +102,6 @@ public class NewsInCategoryFrgAdapter extends RecyclerView.Adapter<NewsInCategor
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
-//            Article article = mListArticles.get(position);
-//            String idEvent = article.getId();
-//            Intent intent = new Intent(mContext, DetailEventActivity.class);
-//            intent.putExtra(ConstParamTransfer.PARAM_ID_EVENT, idEvent);
-//            mContext.startActivity(intent);
 
             Gson gson = new Gson();
             String json = gson.toJson(mListArticles);
@@ -138,10 +131,10 @@ public class NewsInCategoryFrgAdapter extends RecyclerView.Adapter<NewsInCategor
         //====
         //bỏ bớt articles
         mListArticlesMain.clear();
-        if (mListArticles.size() <= VISIBLETHRESHOLD) {
+        if (mListArticles.size() <= ConstParamAPI.ARTICLE_THRESHOLD_CATEGORY_FRG) {
             mListArticlesMain.addAll(mListArticles);
         } else {
-            for (int i = 0; i < VISIBLETHRESHOLD; i++) {
+            for (int i = 0; i < ConstParamAPI.ARTICLE_THRESHOLD_CATEGORY_FRG; i++) {
                 mListArticlesMain.add(mListArticles.get(i));
             }
         }

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 import com.dt.anh.doranews.adapter.recyclerview.NewsAllAdapter2;
@@ -84,7 +83,7 @@ public class AllNewsActivity extends AppCompatActivity {
                 new Handler().postDelayed(() -> {
                     mArticlesArrayList.remove(mArticlesArrayList.size() - 1);
                     mNewsAllAdapter2.notifyItemRemoved(mArticlesArrayList.size());
-                    double thresHold = ConstParamAPI.ARTICLE_THRESHOLD * 1.0;
+                    double thresHold = ConstParamAPI.ARTICLE_THRESHOLD_ALL_NEWS_ACT * 1.0;
                     int index = (int) (Math.ceil(mArticlesArrayList.size() / thresHold)) + 1;
 //                    Log.e("MMM", String.valueOf(index));
                     if (index > 1) {
@@ -129,7 +128,7 @@ public class AllNewsActivity extends AppCompatActivity {
         ServerAPI apiService = retrofit.create(ServerAPI.class);
 
         //Khong hot
-        Call<ArticleResult> call = apiService.getResultArticle(type, page);
+        Call<ArticleResult> call = apiService.getResultArticle(type, page, String.valueOf(ConstParamAPI.ARTICLE_THRESHOLD_ALL_NEWS_ACT));
 
         call.enqueue(new Callback<ArticleResult>() {
             @Override
@@ -147,7 +146,7 @@ public class AllNewsActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (articleResult.getArticles().size() < ConstParamAPI.ARTICLE_THRESHOLD) {
+                if (articleResult.getArticles().size() < ConstParamAPI.ARTICLE_THRESHOLD_ALL_NEWS_ACT) {
                     mNewsAllAdapter2.setFlagLoadContinue(true);
                 }
                 mNewsAllAdapter2.updateListArticles(articleResult.getArticles());
