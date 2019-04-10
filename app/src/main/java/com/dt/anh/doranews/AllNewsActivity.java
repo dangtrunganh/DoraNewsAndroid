@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 import com.dt.anh.doranews.adapter.recyclerview.NewsAllAdapter2;
@@ -100,7 +101,9 @@ public class AllNewsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             category = intent.getStringExtra(CategoryFragment.PARAM_CATEGORY_NAME_ALL_NEWS);
+            Log.e("yy-category", category);
             slug = intent.getStringExtra(CategoryFragment.PARAM_CATEGORY_SLUG_ALL_NEWS);
+            Log.e("yy-slug", slug);
             return true;
         }
         //Mặc định, chống lỗi

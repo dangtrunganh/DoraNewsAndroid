@@ -159,7 +159,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         if (listNews.size() <= VISIBLETHRESHOLD) {
             mCurrentListNews.addAll(listNews);
             currentItemCount = listNews.size();
-            textLoadMore.setVisibility(View.GONE);
+//            textLoadMore.setVisibility(View.GONE);
+            textLoadMore.setVisibility(View.INVISIBLE);
+            textLoadMore.setText("");
         } else {
             for (int i = 0; i < VISIBLETHRESHOLD; i++) {
                 mCurrentListNews.add(listNews.get(i));
@@ -184,7 +186,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                 mCurrentListNews.add(mListNews.get(i));
             }
             currentItemCount = mListNews.size();
-            textLoadMore.setVisibility(View.GONE);
+//            textLoadMore.setVisibility(View.GONE);
+            textLoadMore.setVisibility(View.INVISIBLE);
+            textLoadMore.setText("");
         } else {
             Log.e("currentItemCount-XXX", currentItemCount + "");
             Log.e("mListNews.size()-XXX", mListNews.size() + "");

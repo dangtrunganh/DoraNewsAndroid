@@ -39,7 +39,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         this.mContext = mContext;
         this.textQuantityChoosen = textQuantityChoosen;
         this.mListCategoryChosen = new ArrayList<>();
-        Log.e("hhhh", mListCategories.size() + "");
+//        Log.e("hhhh", mListCategories.size() + "");
         this.btnChoose = btnChose;
     }
 
@@ -57,7 +57,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.bindData(mListCategories.get(position));
     }
-
 
     @Override
     public int getItemCount() {
@@ -116,14 +115,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                 if (mListCategoryChosen.size() > 0) {
                     btnChoose.setEnabled(true);
                     btnChoose.setText("OK");
-                    btnChoose.setBackgroundColor(0xff1816ae);
+                    btnChoose.setBackgroundColor(0xff64DD17);
                 } else {
                     btnChoose.setEnabled(false);
                     btnChoose.setText("CHỌN CHỦ ĐỀ BẠN QUAN TÂM");
                     btnChoose.setBackgroundColor(0x66282525);
                 }
             } else {
-                Log.e("oooo", "ppppp");
                 mRelativeInvisible.setVisibility(View.INVISIBLE);
                 category.setSelected(false);
                 Log.e("BEFORE", mListCategoryChosen.size() + " " + mListCategoryChosen.toString());
@@ -146,7 +144,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                 if (mListCategoryChosen.size() > 0) {
                     btnChoose.setEnabled(true);
                     btnChoose.setText("OK");
-                    btnChoose.setBackgroundColor(0xff1816ae);
+                    btnChoose.setBackgroundColor(0xff64DD17);
                     Log.e("oooo", "true");
                 } else {
                     btnChoose.setEnabled(false);

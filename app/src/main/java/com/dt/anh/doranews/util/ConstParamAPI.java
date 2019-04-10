@@ -8,7 +8,7 @@ public class ConstParamAPI {
 
     //============LongEvent============
     //ThresHold cho loadMore của LongEvent
-    public static final int NUMBER_LONG_EVENT_PER_PAGE = 3;
+    public static final int NUMBER_LONG_EVENT_PER_PAGE = 5;
 
     //============Event============
     //Số event hiển thị tại mỗi lần call API list các event ở CategoryFragment

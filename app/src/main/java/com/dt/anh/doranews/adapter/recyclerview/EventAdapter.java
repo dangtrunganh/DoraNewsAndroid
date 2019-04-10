@@ -208,7 +208,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             Log.d("Event: ", event.getImage());
             Glide.with(itemView.getContext()).load(event.getImage()).
                     apply(new RequestOptions().override(400, 0).
-                            placeholder(R.drawable.ic_launcher_background).error(R.drawable.ic_launcher_background))
+                            placeholder(R.drawable.image_default).error(R.drawable.image_default))
                     .into(mImageCoverEvent);
 
             mTextCategory.setText(event.getCategory().getName());

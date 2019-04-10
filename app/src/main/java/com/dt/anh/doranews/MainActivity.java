@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ArticlePlayerService.OnListenerActivity, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener/*, ArticlePlayerService.OnListenerActivity*/, View.OnClickListener {
 
     private ArrayList<Category> mCategoryArrayList;
 
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity
         initViewController();
         registerListeners();
 //        addSoundCloudFragment();
-        boundService();
+//        boundService();
         getIntentFromNotification();
 //        fireBaseSetUp();
 //        tokenFireBaseServices();
@@ -146,28 +146,28 @@ public class MainActivity extends AppCompatActivity
                 });
     }
 
-    private void boundService() {
-        mConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                if (iBinder instanceof ArticlePlayerService.ArticleBinder) {
-                    mIsConnect = true;
-                    mPlayerService = ((ArticlePlayerService.ArticleBinder) iBinder).getService();
-                    mPlayerService.setListenerActivity(MainActivity.this);
-                } else {
-                    mIsConnect = false;
-                }
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-                mIsConnect = false;
-            }
-        };
-
-        Intent intent = new Intent(this, ArticlePlayerService.class);
-        bindService(intent, mConnection, Service.BIND_AUTO_CREATE);
-    }
+//    private void boundService() {
+//        mConnection = new ServiceConnection() {
+//            @Override
+//            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+//                if (iBinder instanceof ArticlePlayerService.ArticleBinder) {
+//                    mIsConnect = true;
+//                    mPlayerService = ((ArticlePlayerService.ArticleBinder) iBinder).getService();
+//                    mPlayerService.setListenerActivity(MainActivity.this);
+//                } else {
+//                    mIsConnect = false;
+//                }
+//            }
+//
+//            @Override
+//            public void onServiceDisconnected(ComponentName componentName) {
+//                mIsConnect = false;
+//            }
+//        };
+//
+//        Intent intent = new Intent(this, ArticlePlayerService.class);
+//        bindService(intent, mConnection, Service.BIND_AUTO_CREATE);
+//    }
 
     private void stopForegroundServiceArticle() {
         Intent intent = new Intent(this, ArticlePlayerService.class);
@@ -303,10 +303,10 @@ public class MainActivity extends AppCompatActivity
         viewPager.setAdapter(adapter);
     }
 
-    @Override
-    public void updateArticle(Article article) {
-
-    }
+//    @Override
+//    public void updateArticle(Article article) {
+//
+//    }
 
     @Override
     public void onClick(View view) {
@@ -316,18 +316,18 @@ public class MainActivity extends AppCompatActivity
 //            case R.id.image_download:
 //                break;
             case R.id.image_play_control_music:
-                changeStateFromController();
+//                changeStateFromController();
                 break;
             case R.id.image_next_control_music:
-                nextFromController();
-                updateUI();
+//                nextFromController();
+//                updateUI();
                 break;
             case R.id.image_previous_control_music:
-                previousFromController();
-                updateUI();
+//                previousFromController();
+//                updateUI();
                 break;
             case R.id.constraint_control_music:
-                showDetailArticle();
+//                showDetailArticle();
                 break;
             default:
                 break;
@@ -335,55 +335,55 @@ public class MainActivity extends AppCompatActivity
     }
 
     //====
-    private void previousFromController() {
-        if (!mIsConnect) {
-            return;
-        }
-        mPlayerService.previousArticle();
-    }
+//    private void previousFromController() {
+//        if (!mIsConnect) {
+//            return;
+//        }
+//        mPlayerService.previousArticle();
+//    }
+//
+//    private void nextFromController() {
+//        if (!mIsConnect) {
+//            return;
+//        }
+//        mPlayerService.nextArticle();
+//    }
 
-    private void nextFromController() {
-        if (!mIsConnect) {
-            return;
-        }
-        mPlayerService.nextArticle();
-    }
+//    private void changeStateFromController() {
+//        if (!mIsConnect) {
+//            return;
+//        }
+//        mPlayerService.playArticle();
+//        if (mPlayerService.isOnlyPlaying()) {
+//            mImagePlaySmall.setImageLevel(StateLevel.PAUSE);
+//            return;
+//        }
+//        mImagePlaySmall.setImageLevel(StateLevel.PLAY);
+//    }
+//
+//    private int getLevelImagePlay() {
+//        if (mPlayerService.isOnlyPlaying()) {
+//            return StateLevel.PAUSE;
+//        } else {
+//            return StateLevel.PLAY;
+//        }
+//    }
 
-    private void changeStateFromController() {
-        if (!mIsConnect) {
-            return;
-        }
-        mPlayerService.playArticle();
-        if (mPlayerService.isOnlyPlaying()) {
-            mImagePlaySmall.setImageLevel(StateLevel.PAUSE);
-            return;
-        }
-        mImagePlaySmall.setImageLevel(StateLevel.PLAY);
-    }
-
-    private int getLevelImagePlay() {
-        if (mPlayerService.isOnlyPlaying()) {
-            return StateLevel.PAUSE;
-        } else {
-            return StateLevel.PLAY;
-        }
-    }
-
-
-    public void updateUI() {
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mImagePlaySmall.setImageLevel(getLevelImagePlay());
-                mTextTitleArticle
-                        .setText(getCurrentArticle().getTitle());
-            }
-        });
-    }
-
-    public Article getCurrentArticle() {
-        return mPlayerService.getCurrentArticle();
-    }
+//
+//    public void updateUI() {
+//        this.runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                mImagePlaySmall.setImageLevel(getLevelImagePlay());
+//                mTextTitleArticle
+//                        .setText(getCurrentArticle().getTitle());
+//            }
+//        });
+//    }
+//
+//    public Article getCurrentArticle() {
+//        return mPlayerService.getCurrentArticle();
+//    }
 
     @Override
     protected void onStart() {
@@ -402,8 +402,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        unbindService(mConnection);
-        mIsConnect = false;
+//        unbindService(mConnection);
+//        mIsConnect = false;
         super.onDestroy();
     }
 
@@ -437,20 +437,20 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    public void setIndexCurrentArticle(int position) {
-        if (!mIsConnect) {
-            mPlayerService.setIndexArticleCurrent(0);
-        }
-        mPlayerService.setIndexArticleCurrent(position);
-    }
+//    public void setIndexCurrentArticle(int position) {
+//        if (!mIsConnect) {
+//            mPlayerService.setIndexArticleCurrent(0);
+//        }
+//        mPlayerService.setIndexArticleCurrent(position);
+//    }
+//
+//    public void setCurrentArticles(List<Article> articles) {
+//        mPlayerService.setArticlesList(articles);
+//    }
 
-    public void setCurrentArticles(List<Article> articles) {
-        mPlayerService.setArticlesList(articles);
-    }
-
-    public void playArticle(int position) {
-        mPlayerService.playArticle(position);
-    }
+//    public void playArticle(int position) {
+//        mPlayerService.playArticle(position);
+//    }
 
     public void setVisibleController(boolean isVisible) {
         if (isVisible) {
