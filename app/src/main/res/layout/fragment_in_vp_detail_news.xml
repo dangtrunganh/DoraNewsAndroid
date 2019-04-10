@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
@@ -10,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
 
         <ScrollView
             android:layout_width="match_parent"
@@ -30,14 +28,19 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/image_cover_event"
-                        />
+                        android:src="@drawable/image_default" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#8C262626" />
+
                     <ImageView
                         android:id="@+id/image_play_fr_detail_news"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
                         android:layout_gravity="center"
-                        app:srcCompat="@drawable/ic_play_pause_toggle"/>
+                        app:srcCompat="@drawable/ic_play_pause_toggle" />
 
                 </FrameLayout>
 
@@ -47,7 +50,7 @@
                     android:orientation="vertical"
                     android:paddingLeft="10dp"
 
-                    android:paddingTop="5dp"
+                    android:paddingTop="12dp"
                     android:paddingRight="10dp">
 
                     <TextView
@@ -57,13 +60,13 @@
                         android:gravity="center"
                         android:lineSpacingExtra="5dp"
                         android:textColor="@android:color/black"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="5dp"
                         android:text=""
                         android:textColor="@android:color/black"
                         android:textSize="16sp"
@@ -73,18 +76,18 @@
                         android:id="@+id/text_content_fr_detail_news"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="5dp"
                         android:lineSpacingExtra="8dp"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:textColor="#000"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
                         android:textStyle="normal" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="10dp"
                         android:gravity="end"
                         android:orientation="horizontal"
                         android:paddingLeft="10dp"
@@ -94,16 +97,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="(Tóm tắt bởi Dora-AI)"
-                            android:textColor="@android:color/black"
+                            android:textColor="#9a9a9a"
                             android:textSize="16sp"
                             android:textStyle="italic" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
                         android:orientation="horizontal">
 
                         <View
@@ -116,8 +119,11 @@
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="10"
-                            android:background="@drawable/border_read_full"
-                            android:text="Đọc chi tiết" />
+                            android:background="@drawable/border_read_original"
+                            android:text="Đọc chi tiết"
+                            android:textAllCaps="false"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp" />
 
                         <View
                             android:layout_width="0dp"
@@ -127,12 +133,11 @@
                     </LinearLayout>
 
                 </LinearLayout>
-            </LinearLayout>
 
+            </LinearLayout>
 
         </ScrollView>
 
     </LinearLayout>
-
 
 </RelativeLayout>

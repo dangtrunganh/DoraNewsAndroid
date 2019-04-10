@@ -36,8 +36,7 @@
             android:name=".MainActivity"
             android:hardwareAccelerated="true" />
         <activity
-            android:name=".DetailNewsActivity"
-            android:hardwareAccelerated="true" />
+            android:name=".DetailNewsActivity"/>
         <activity
             android:name=".WebViewActivity"
             android:hardwareAccelerated="true" />
@@ -62,20 +61,20 @@
             android:label="@string/title_activity_search"
             android:theme="@style/FullscreenTheme"/>
 
-        <service
-            android:name=".service.audio.MusicService"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.media.browse.MediaBrowserService" />
-            </intent-filter>
-        </service>
+        <!--<service-->
+            <!--android:name=".service.audio.MusicService"-->
+            <!--android:enabled="true"-->
+            <!--android:exported="true">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.media.browse.MediaBrowserService" />-->
+            <!--</intent-filter>-->
+        <!--</service>-->
 
-        <receiver android:name="android.support.v4.media.session.MediaButtonReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
-            </intent-filter>
-        </receiver>
+        <!--<receiver android:name="android.support.v4.media.session.MediaButtonReceiver">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MEDIA_BUTTON" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
     </application>
 
 </manifest>

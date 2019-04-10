@@ -119,4 +119,20 @@ public class Article {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "id=" + id +
+                ", slug='" + slug + '\'' +
+                ", title='" + title + '\'' +
+                ", voice='" + voice + '\'' +
+                ", image='" + image + '\'' +
+                ", time='" + time + '\'' +
+                ", readableTime='" + readableTime + '\'' +
+                ", url='" + url + '\'' +
+                ", source=" + source +
+                ", medias=" + medias +
+                '}';
+    }
 }

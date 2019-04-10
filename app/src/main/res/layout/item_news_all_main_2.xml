@@ -40,7 +40,7 @@
             android:layout_width="120dp"
             android:layout_height="99dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/image_cover_event" />
+            android:src="@drawable/image_default" />
 
         <LinearLayout
             android:layout_width="match_parent"

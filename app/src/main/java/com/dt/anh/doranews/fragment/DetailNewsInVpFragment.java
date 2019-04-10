@@ -59,20 +59,20 @@ public class DetailNewsInVpFragment extends BaseFragment implements View.OnClick
 
     private Article currentArticles;
 
-    private static ArticlePlayerService.OnListenerActivity mListenerActivity;
+//    private static ArticlePlayerService.OnListenerActivity mListenerActivity;
 
     public DetailNewsInVpFragment() {
 
     }
 
-    public static DetailNewsInVpFragment newInstance(String newsJsonString, /*MediaManager mediaManager,*/ int position, ArticlePlayerService.OnListenerActivity listenerActivity) {
+    public static DetailNewsInVpFragment newInstance(String newsJsonString, /*MediaManager mediaManager,*/ int position/*, ArticlePlayerService.OnListenerActivity listenerActivity*/) {
         DetailNewsInVpFragment detailNewsInVpFragment = new DetailNewsInVpFragment();
         Bundle args = new Bundle();
         args.putString(PARAM_DETAIL_NEWS, newsJsonString);
         detailNewsInVpFragment.setArguments(args);
 //        mMediaManager = mediaManager;
         mPosition = position;
-        mListenerActivity = listenerActivity;
+//        mListenerActivity = listenerActivity;
         return detailNewsInVpFragment;
     }
 
@@ -82,20 +82,20 @@ public class DetailNewsInVpFragment extends BaseFragment implements View.OnClick
         initializeVariable();
 //        boundService();
 //        updateUI();
-        mMediaBrowserHelper = new MediaBrowserConnection(getContext());
-        mMediaBrowserHelper.registerCallback(new MediaBrowserListener());
+//        mMediaBrowserHelper = new MediaBrowserConnection(getContext());
+//        mMediaBrowserHelper.registerCallback(new MediaBrowserListener());
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mMediaBrowserHelper.onStart();
+//        mMediaBrowserHelper.onStart();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mMediaBrowserHelper.onStop();
+//        mMediaBrowserHelper.onStop();
     }
 
     //    private void boundService() {
@@ -200,7 +200,7 @@ public class DetailNewsInVpFragment extends BaseFragment implements View.OnClick
 
         Glide.with(view.getContext()).load(currentArticles.getImage()).
                 apply(new RequestOptions().override(400, 0).
-                        placeholder(R.drawable.ic_launcher_background).error(R.drawable.ic_launcher_background))
+                        placeholder(R.drawable.image_default).error(R.drawable.image_default))
                 .into(imageCoverNews);
         txtTitleNews.setText(currentArticles.getTitle());
         String summarization = "";
@@ -250,10 +250,10 @@ public class DetailNewsInVpFragment extends BaseFragment implements View.OnClick
         switch (view.getId()) {
             case R.id.image_play_fr_detail_news:
                 if (mIsPlaying) {
-                    mMediaBrowserHelper.getTransportControls().pause();
+//                    mMediaBrowserHelper.getTransportControls().pause();
                 } else {
 //                    mMediaBrowserHelper.getTransportControls().playFromMediaId(String.valueOf(currentArticles.getId()), new Bundle());
-                    mMediaBrowserHelper.getTransportControls().play();
+//                    mMediaBrowserHelper.getTransportControls().play();
                 }
 //                changeStateFromDetailMusic();
                 break;
@@ -280,32 +280,32 @@ public class DetailNewsInVpFragment extends BaseFragment implements View.OnClick
      * Customize the connection to our {@link android.support.v4.media.MediaBrowserServiceCompat}
      * and implement our app specific desires.
      */
-    private class MediaBrowserConnection extends MediaBrowserHelper {
-        private MediaBrowserConnection(Context context) {
-            super(context, MusicService.class);
-        }
-
-        @Override
-        protected void onConnected(@NonNull MediaControllerCompat mediaController) {
-//            mSeekBarAudio.setMediaController(mediaController);
-        }
-
-        @Override
-        protected void onChildrenLoaded(@NonNull String parentId,
-                                        @NonNull List<MediaBrowserCompat.MediaItem> children) {
-            super.onChildrenLoaded(parentId, children);
-
-            final MediaControllerCompat mediaController = getMediaController();
-
-            // Queue up all media items for this simple sample.
-            for (final MediaBrowserCompat.MediaItem mediaItem : children) {
-                mediaController.addQueueItem(mediaItem.getDescription());
-            }
-
-            // Call prepare now so pressing play just works.
-            mediaController.getTransportControls().prepare();
-        }
-    }
+//    private class MediaBrowserConnection extends MediaBrowserHelper {
+//        private MediaBrowserConnection(Context context) {
+//            super(context, MusicService.class);
+//        }
+//
+//        @Override
+//        protected void onConnected(@NonNull MediaControllerCompat mediaController) {
+////            mSeekBarAudio.setMediaController(mediaController);
+//        }
+//
+//        @Override
+//        protected void onChildrenLoaded(@NonNull String parentId,
+//                                        @NonNull List<MediaBrowserCompat.MediaItem> children) {
+//            super.onChildrenLoaded(parentId, children);
+//
+//            final MediaControllerCompat mediaController = getMediaController();
+//
+//            // Queue up all media items for this simple sample.
+//            for (final MediaBrowserCompat.MediaItem mediaItem : children) {
+//                mediaController.addQueueItem(mediaItem.getDescription());
+//            }
+//
+//            // Call prepare now so pressing play just works.
+//            mediaController.getTransportControls().prepare();
+//        }
+//    }
 
     /**
      * Implementation of the {@link MediaControllerCompat.Callback} methods we're interested in.
@@ -315,39 +315,39 @@ public class DetailNewsInVpFragment extends BaseFragment implements View.OnClick
      * are added or removed from the queue. We don't do this here in order to keep the UI
      * simple.
      */
-    private class MediaBrowserListener extends MediaControllerCompat.Callback {
-        @Override
-        public void onPlaybackStateChanged(PlaybackStateCompat playbackState) {
-            mIsPlaying = playbackState != null &&
-                    playbackState.getState() == PlaybackStateCompat.STATE_PLAYING;
-            btnPlay.setPressed(mIsPlaying);
-            //Ca ben duoi
-        }
-
-        @Override
-        public void onMetadataChanged(MediaMetadataCompat mediaMetadata) {
-            if (mediaMetadata == null) {
-                return;
-            }
-
-            //Đoạn này cần gọi ở màn hình ngoài
-//            mTitleTextView.setText(
-//                    mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
-//            mArtistTextView.setText(
-//                    mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
-//            mAlbumArt.setImageBitmap(MusicLibrary.getAlbumBitmap(
-//                    MainActivity.this,
-//                    mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)));
-        }
-
-        @Override
-        public void onSessionDestroyed() {
-            super.onSessionDestroyed();
-        }
-
-        @Override
-        public void onQueueChanged(List<MediaSessionCompat.QueueItem> queue) {
-            super.onQueueChanged(queue);
-        }
-    }
+//    private class MediaBrowserListener extends MediaControllerCompat.Callback {
+//        @Override
+//        public void onPlaybackStateChanged(PlaybackStateCompat playbackState) {
+//            mIsPlaying = playbackState != null &&
+//                    playbackState.getState() == PlaybackStateCompat.STATE_PLAYING;
+//            btnPlay.setPressed(mIsPlaying);
+//            //Ca ben duoi
+//        }
+//
+//        @Override
+//        public void onMetadataChanged(MediaMetadataCompat mediaMetadata) {
+//            if (mediaMetadata == null) {
+//                return;
+//            }
+//
+//            //Đoạn này cần gọi ở màn hình ngoài
+////            mTitleTextView.setText(
+////                    mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
+////            mArtistTextView.setText(
+////                    mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
+////            mAlbumArt.setImageBitmap(MusicLibrary.getAlbumBitmap(
+////                    MainActivity.this,
+////                    mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)));
+//        }
+//
+//        @Override
+//        public void onSessionDestroyed() {
+//            super.onSessionDestroyed();
+//        }
+//
+//        @Override
+//        public void onQueueChanged(List<MediaSessionCompat.QueueItem> queue) {
+//            super.onQueueChanged(queue);
+//        }
+//    }
 }

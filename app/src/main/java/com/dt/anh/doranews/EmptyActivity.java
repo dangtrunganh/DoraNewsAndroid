@@ -16,6 +16,9 @@ import com.dt.anh.doranews.util.ConstParamStorageLocal;
 import com.dt.anh.doranews.util.ConstParamTransfer;
 import com.dt.anh.doranews.util.ConstRoot;
 import com.dt.anh.doranews.util.UtilTools;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -51,17 +54,30 @@ public class EmptyActivity extends AppCompatActivity {
         return android_id;
     }
 
-    private String getTokenFirebase() {
-        FireBaseInstanceIDService fireBaseInstanceIDService = new FireBaseInstanceIDService();
-        String mToken = fireBaseInstanceIDService.getToken();
-        Log.e("k-Token FireBase", mToken);
-        return mToken;
+    private void getTokenFirebaseAndSendToServer() {
+//        FireBaseInstanceIDService fireBaseInstanceIDService = new FireBaseInstanceIDService();
+//        String mToken = fireBaseInstanceIDService.getToken();
+//        Log.e("k-Token FireBase", mToken);
+
+        //===
+//        String mToken = "";
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(EmptyActivity.this, new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String mToken = instanceIdResult.getToken();
+                Log.e("k-newToken", mToken);
+//                return mToken;
+                sendInfoToServer(mToken);
+            }
+        });
+//        return mToken;
     }
 
-    private void sendInfoToServer() {
+    private void sendInfoToServer(String mToken) {
         String deviceId = getDeviceId();
-        String tokenFb = getTokenFirebase();
-        if (deviceId != null && tokenFb != null) {
+//        String tokenFb = getTokenFirebase();
+//        String tokenFb = mToken;
+        if (deviceId != null && mToken != null) {
             //Gửi thông tin lên server
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(ConstRoot.URL_GET_ROOT_LOG_IN)
@@ -72,7 +88,7 @@ public class EmptyActivity extends AppCompatActivity {
             RequestBody requestBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("deviceid", deviceId)
-                    .addFormDataPart("token", tokenFb)
+                    .addFormDataPart("token", mToken)
                     .build();
 
             Call<UserResult> call = apiService.login(requestBody);
@@ -110,7 +126,8 @@ public class EmptyActivity extends AppCompatActivity {
         if (uuId.equals(ConstParamStorageLocal.DEFAULT_VALUE_PREF_KEY_UID_DEFAULT) &&
                 jsonCategory.equals(ConstParamStorageLocal.DEFAULT_VALUE_PREF_LIST_CATEGORY_DEFAULT)) {
             //Tức là đang rỗng, chưa có uId trong SharedPreference
-            sendInfoToServer();
+//            sendInfoToServer();
+            getTokenFirebaseAndSendToServer();
         }
     }
 

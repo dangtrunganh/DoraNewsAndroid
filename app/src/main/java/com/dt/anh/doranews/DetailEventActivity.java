@@ -60,8 +60,10 @@ public class DetailEventActivity extends AppCompatActivity implements View.OnCli
     private ArrayList<Article> mArticles = new ArrayList<>();
 
     private String mIdLongEvent;
+    private RecyclerView recyclerViewLongEvent;
 
     private String uId;
+    private TextView tvTitleLongEvent;
 
     private final String NUMBER_LONG_EVENT_PER_PAGE_STRING = String.valueOf(ConstParamAPI.NUMBER_LONG_EVENT_PER_PAGE);
 //    private final int START_PAGE = 1;
@@ -164,7 +166,7 @@ public class DetailEventActivity extends AppCompatActivity implements View.OnCli
                 }
                 Glide.with(getApplicationContext()).load(eventMainResult.getImage())
                         .apply(new RequestOptions().override(400, 0).
-                                placeholder(R.drawable.ic_launcher_background).error(R.drawable.ic_launcher_background))
+                                placeholder(R.drawable.image_default).error(R.drawable.image_default))
                         .into(mImageViewCover);
                 mTextTitleEvent.setText(eventMainResult.getTitle());
                 mTextNameCategory.setText(eventMainResult.getCategory().getName());
@@ -200,6 +202,7 @@ public class DetailEventActivity extends AppCompatActivity implements View.OnCli
         mTextNameCategory = findViewById(R.id.text_category_detail_event);
         mTextNumberNews = findViewById(R.id.text_number_news_detail_event);
         mTextLoadMoreNews = findViewById(R.id.text_load_more_news);
+        tvTitleLongEvent = findViewById(R.id.text_long_event_title);
         mTextLoadMoreNews.setOnClickListener(this);
 
         mToolbar = findViewById(R.id.toolbar_detail_event);
@@ -212,11 +215,9 @@ public class DetailEventActivity extends AppCompatActivity implements View.OnCli
         }
 
         collapsingToolbarLayout = findViewById(R.id.collab_toolbar_layout_detail_event);
-        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
-        mToolbar.setNavigationOnClickListener(v -> finish());
-
         collapsingToolbarLayout.setTitleEnabled(false);
         this.setTitle("");
+        collapsing();
 
         //=================
         //RecyclerView - List of events
@@ -232,7 +233,7 @@ public class DetailEventActivity extends AppCompatActivity implements View.OnCli
 
         //=================
         //RecyclerView - List of long events
-        RecyclerView recyclerViewLongEvent = findViewById(R.id.recycler_long_events);
+        recyclerViewLongEvent = findViewById(R.id.recycler_long_events);
         LinearLayoutManager linearLayoutManagerLongEvent = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
         recyclerViewLongEvent.setLayoutManager(linearLayoutManagerLongEvent);
@@ -244,6 +245,11 @@ public class DetailEventActivity extends AppCompatActivity implements View.OnCli
         mLongEventAdapter.notifyDataSetChanged();
 
         recyclerViewLongEvent.setAdapter(mLongEventAdapter);
+    }
+
+    private void collapsing() {
+        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+        mToolbar.setNavigationOnClickListener(v -> finish());
     }
 
     private void loadListLongEvent(String idLongEvent, int numberPage) {
@@ -293,6 +299,12 @@ public class DetailEventActivity extends AppCompatActivity implements View.OnCli
                     return;
                 }
 
+//                if (mainDetailLongEvent.getData().size() == 1) {
+//                    tvTitleLongEvent.setVisibility(View.GONE);
+//                    recyclerViewLongEvent.setVisibility(View.GONE);
+//                    dialog.dismiss();
+//                    return;
+//                }
                 mLongEvents.addAll(mainDetailLongEvent.getData());
                 mLongEventAdapter.updateListLongEvents(mainDetailLongEvent.getData());
                 dialog.dismiss();

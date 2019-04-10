@@ -36,6 +36,7 @@ import com.dt.anh.doranews.model.result.eventresult.EventResult;
 import com.dt.anh.doranews.util.ConstParamAPI;
 import com.dt.anh.doranews.util.ConstRoot;
 import com.dt.anh.doranews.util.UtilTools;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -60,7 +61,7 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
     private ArrayList<Datum> mDatumArrayList = new ArrayList<>();
     private ArrayList<Article> mArticleArrayList = new ArrayList<>();
     int maxNumber = 0;
-    private ProgressDialog dialog;
+    //    1private ProgressDialog dialog;
     private RecyclerView recyclerViewEvents;
     private RecyclerView recyclerViewNews;
     private SwipeRefreshLayout swipeContainer;
@@ -69,6 +70,8 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
     private TextView tvArticleTitle;
     private TextView tvEventTitle;
     private TextView tvTextNoNetwork;
+
+    private ShimmerFrameLayout mShimmerViewContainer;
 
     //    private long oldTime = System.currentTimeMillis();
     private long oldTime = -1;
@@ -111,15 +114,15 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
         if (view == null) {
             return;
         }
-        swipeContainer = getView().findViewById(R.id.swipeContainer_frg_event);
+        swipeContainer = view.findViewById(R.id.swipeContainer_frg_event);
         // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        recyclerViewEvents = getView().findViewById(R.id.recycler_event);
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),
+        recyclerViewEvents = view.findViewById(R.id.recycler_event);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.VERTICAL, false);
         linearLayoutManager.setAutoMeasureEnabled(true);
         recyclerViewEvents.setLayoutManager(linearLayoutManager);
@@ -129,12 +132,12 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
         recyclerViewEvents.setHasFixedSize(false);
 //        recyclerViewEvents.= true;
 
-        NestedScrollView nestedScrollView = getView().findViewById(R.id.nested_scroll_view);
+        NestedScrollView nestedScrollView = view.findViewById(R.id.nested_scroll_view);
         mEventAdapter = new EventAdapter(mDatumArrayList, getActivity(), recyclerViewEvents, nestedScrollView);
         recyclerViewEvents.setAdapter(mEventAdapter);
 
         //==============
-        recyclerViewNews = getView().findViewById(R.id.recycler_news_frg_event);
+        recyclerViewNews = view.findViewById(R.id.recycler_news_frg_event);
         recyclerViewNews.setNestedScrollingEnabled(false);
         LinearLayoutManager linearLayoutManagerX = new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.HORIZONTAL, false);
@@ -142,10 +145,14 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
 
         recyclerViewNews.setAdapter(mArticleAdapter);
         mArticleAdapter.notifyDataSetChanged();
-        tvViewAll = getView().findViewById(R.id.tv_all_news_frg_event);
-        tvArticleTitle = getView().findViewById(R.id.text_articles_title);
-        tvEventTitle = getView().findViewById(R.id.text_event_title);
-        tvTextNoNetwork = getView().findViewById(R.id.text_no_network);
+        tvViewAll = view.findViewById(R.id.tv_all_news_frg_event);
+        tvArticleTitle = view.findViewById(R.id.text_articles_title);
+        tvEventTitle = view.findViewById(R.id.text_event_title);
+        tvTextNoNetwork = view.findViewById(R.id.text_no_network);
+
+
+        //==skeleton view===
+        mShimmerViewContainer = view.findViewById(R.id.shimmer_view_container);
 
         loadDataMain();
 
@@ -155,6 +162,13 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
         // Make sure you call swipeContainer.setRefreshing(false)
         // once the network request has completed successfully.
         swipeContainer.setOnRefreshListener(this::loadDataMain);
+    }
+
+    private void refreshData() {
+        //11. Có thể không cần cho visible
+//        mShimmerViewContainer.setVisibility(View.VISIBLE);
+        mShimmerViewContainer.startShimmerAnimation();
+        loadDataMain();
     }
 
     private void loadDataMain() {
@@ -199,14 +213,14 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
             //Không có mạng thì ko có load more
             //Không có mạng với tabHost
             tvTextNoNetwork.setVisibility(View.GONE);
+            tvViewAll.setVisibility(View.GONE);
             Toast.makeText(getContext(), "No Available Network. Offline mode is on!", Toast.LENGTH_LONG).show();
 //            return;
             //Load local event
-            ArrayList<Datum> arrayListEvent = UtilTools.getListEvent(getContext());
+            ArrayList<Datum> arrayListEvent = UtilTools.getListEvent(Objects.requireNonNull(getContext()));
             if (arrayListEvent.size() != 0) {
                 loadLocalEventToOfflineMode(arrayListEvent);
             }
-
 
             //Load local articles
             ArrayList<Article> articles = UtilTools.getListArticle(getContext());
@@ -214,7 +228,11 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
                 loadLocalArticleToOfflineMode(articles);
             }
             swipeContainer.setRefreshing(false);
-            dialog.dismiss();
+            //1dialog.dismiss();
+            //==skeleton-view===
+            mShimmerViewContainer.stopShimmerAnimation();
+            mShimmerViewContainer.setVisibility(View.GONE);
+            //=====
         } else {
             //Không có mạng với các tab khác
             //Tạm thời disable hết các list + text view đi
@@ -227,7 +245,11 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
             //display nút xem tất cả đi
             tvViewAll.setVisibility(View.GONE);
             swipeContainer.setRefreshing(false);
-            dialog.dismiss();
+            //1dialog.dismiss();
+            //==skeleton-view===
+            mShimmerViewContainer.stopShimmerAnimation();
+            mShimmerViewContainer.setVisibility(View.GONE);
+            //=====
         }
     }
 
@@ -263,6 +285,18 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
         return getArguments().getBoolean(PARAM_HOT_EVENT);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mShimmerViewContainer.startShimmerAnimation();
+    }
+
+    @Override
+    public void onPause() {
+        mShimmerViewContainer.stopShimmerAnimation();
+        super.onPause();
+    }
+
     private void loadNews() {
         String type = getType();
         Log.e("tt-type", type);
@@ -285,7 +319,12 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
                 articleResult = response.body();
                 if (articleResult == null) {
                     Toast.makeText(getContext(), "Failed to load data articles", Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
+
+                    //==skeleton-view===
+                    mShimmerViewContainer.stopShimmerAnimation();
+                    mShimmerViewContainer.setVisibility(View.GONE);
+                    //=====
+//                    dialog.dismiss();
                     swipeContainer.setRefreshing(false);
                     return;
                 }
@@ -298,14 +337,21 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
 //                    Toast.makeText(getContext(), "Stored data article!", Toast.LENGTH_SHORT).show();
                 }
 
-                dialog.dismiss();
+//                dialog.dismiss();
+                //==skeleton-view===
+                mShimmerViewContainer.stopShimmerAnimation();
+                mShimmerViewContainer.setVisibility(View.GONE);
+                //=====
                 swipeContainer.setRefreshing(false);
             }
 
             @Override
             public void onFailure(@NonNull Call<ArticleResult> call, @NonNull Throwable t) {
-//                Toast.makeText(getContext(), "Failed to load data - onFailure articles", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
+//                1. dialog.dismiss();
+                //==skeleton-view===
+                mShimmerViewContainer.stopShimmerAnimation();
+                mShimmerViewContainer.setVisibility(View.GONE);
+                //=====
                 swipeContainer.setRefreshing(false);
             }
         });
@@ -396,10 +442,10 @@ public class CategoryFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     protected void initProgressbar() {
-        dialog = new ProgressDialog(getActivity());
-        dialog.setMessage("Loading..");
-        dialog.setCancelable(false);
-        dialog.show();
+//        1dialog = new ProgressDialog(getActivity());
+//        1dialog.setMessage("Loading..");
+//        1dialog.setCancelable(false);
+//        1dialog.show();
     }
 
     @Override

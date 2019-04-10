@@ -131,7 +131,7 @@ public class PickCategoryActivity extends AppCompatActivity implements View.OnCl
                 mCategoryListTest = mCategoryAPI.getArrayList();
                 Log.e("API===", mCategoryListTest.toString());
 //                setUpAdapter(mCategoryListTest);
-//                Log.e("size")
+//                Log.e("size")#64DD17
                 if (flag) {
                     //flag = true: Đã có trong local list các category đã chọn
                     Log.e("ListTest.size()", mCategoryListTest.size() + "");
@@ -153,7 +153,7 @@ public class PickCategoryActivity extends AppCompatActivity implements View.OnCl
                     mCategoryAdapter.setListCategoryChosen(mCategoryListInLocal);
                     btnPick.setEnabled(true);
                     btnPick.setText("OK");
-                    btnPick.setBackgroundColor(0xff1816ae);
+                    btnPick.setBackgroundColor(0xff64DD17);
                     txtPickDone.setText("(Đã chọn " + mCategoryListInLocal.size() + "/" + mCategoryListTest.size() + ")");
                 } else {
                     txtPickDone.setText("(Đã chọn 0" + "/" + mCategoryListTest.size() + ")");

@@ -11,8 +11,8 @@ import com.dt.anh.doranews.service.players.MediaPlayerAdapter;
  */
 public abstract class PlaybackInfoListener {
 
-    public abstract void onPlaybackStateChange(PlaybackStateCompat state);
-
-    public void onPlaybackCompleted() {
-    }
+//    public abstract void onPlaybackStateChange(PlaybackStateCompat state);
+//
+//    public void onPlaybackCompleted() {
+//    }
 }

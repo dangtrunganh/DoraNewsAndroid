@@ -5,7 +5,7 @@
     xmlns:card_view="http://schemas.android.com/tools"
     android:orientation="horizontal"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingRight="2dp"
+    android:paddingEnd="2dp"
     android:paddingTop="2dp"
     android:paddingBottom="2dp"
     android:layout_marginBottom="5dp">

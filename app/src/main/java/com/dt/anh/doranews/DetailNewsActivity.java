@@ -41,12 +41,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.relex.circleindicator.CircleIndicator;
+import ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator;
 
-public class DetailNewsActivity extends AppCompatActivity implements ArticlePlayerService.OnListenerActivity, View.OnClickListener {
+public class DetailNewsActivity extends AppCompatActivity implements /*ArticlePlayerService.OnListenerActivity,*/ View.OnClickListener {
     private android.support.v4.view.ViewPager vpgNews;
     private DetailNewsAdapter mDetailNewsAdapter;
-    private CircleIndicator indicator;
+//    private CircleIndicator indicator;
 
+    private ScrollingPagerIndicator indicator;
     private ArrayList<Article> mArrayNews;
 //    private MediaManager mMediaManager;
     int position = 0;
@@ -176,54 +178,58 @@ public class DetailNewsActivity extends AppCompatActivity implements ArticlePlay
             titleEvent = intent.getStringExtra(ConstParamTransfer.TITLE_EVENT);
             position = intent.getIntExtra(NewsInCategoryFrgAdapter.POSITION_CLICK, 0);
         } else {
-            Toast.makeText(this, "Error, nothing in intent", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Error, nothing in intent", Toast.LENGTH_SHORT).show();
+            Log.e("Eror-popo", "Error, nothing in intent");
             return;
         }
         Gson gson = new Gson();
         mArrayNews = gson.fromJson(json, new TypeToken<List<Article>>() {
         }.getType());
-        Log.e("popo", mArrayNews.toString());
+//        Log.e("popo", mArrayNews.toString());
 
         //=====
-        ArticleLibrary.currentArticles = mArrayNews;
+//        ArticleLibrary.currentArticles = mArrayNews;
 
 
 //        mMediaManager = new MediaManager(this, mArrayNews);
         //===
 //        mArrayNews = NewsFake.getListNews();
         vpgNews = findViewById(R.id.vpg_news_detail_news);
+        vpgNews.setOffscreenPageLimit(2);
+        vpgNews.requestDisallowInterceptTouchEvent(true);
         indicator = findViewById(R.id.indicator_detail_news);
-        mDetailNewsAdapter = new DetailNewsAdapter(getSupportFragmentManager());
+        mDetailNewsAdapter = new DetailNewsAdapter(getSupportFragmentManager(), mArrayNews/*, DetailNewsActivity.this*/);
+//        mDetailNewsAdapter.set(1);
 
-        ArrayList<DetailNewsInVpFragment> fragments = new ArrayList<>();
-        for (int i = 0; i < mArrayNews.size(); i++) {
-            Article news = mArrayNews.get(i);
-            String jsonNews = gson.toJson(news);
-            DetailNewsInVpFragment fragment = DetailNewsInVpFragment.newInstance(jsonNews/*, mMediaManager*/, i, DetailNewsActivity.this);
-            fragments.add(fragment);
-        }
-        mDetailNewsAdapter.set_fragments(fragments);
+//        ArrayList<DetailNewsInVpFragment> fragments = new ArrayList<>();
+//        for (int i = 0; i < mArrayNews.size(); i++) {
+//            Article news = mArrayNews.get(i);
+//            String jsonNews = gson.toJson(news);
+//            DetailNewsInVpFragment fragment = DetailNewsInVpFragment.newInstance(jsonNews/*, mMediaManager*/, i, DetailNewsActivity.this);
+//            fragments.add(fragment);
+//        }
+//        mDetailNewsAdapter.set_fragments(fragments);
 
 
-        vpgNews.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                mDetailNewsAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+//        vpgNews.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                mDetailNewsAdapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//
+//            }
+//        });
         vpgNews.setAdapter(mDetailNewsAdapter);
         vpgNews.setOffscreenPageLimit(mArrayNews.size());
-        indicator.setViewPager(vpgNews);
+        indicator.attachToPager(vpgNews);
 
         Toolbar toolbar = findViewById(R.id.toolbar_detail_news);
         setSupportActionBar(toolbar);
@@ -231,15 +237,18 @@ public class DetailNewsActivity extends AppCompatActivity implements ArticlePlay
 //            getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (!titleEvent.equals("")) {
-            toolbar.setTitle(titleEvent);
 
-        } else {
-            toolbar.setTitle("Title hot event");
-        }
+        //Không set title cho toolbar nữa, thay vào đó là instagram indicator
+//        if (!titleEvent.equals("")) {
+//            toolbar.setTitle(titleEvent);
+//
+//        } else {
+//            toolbar.setTitle("Title hot event");
+//        }
 
         //Lấy tiêu đề từ ngoài truyền vào
 
@@ -271,10 +280,10 @@ public class DetailNewsActivity extends AppCompatActivity implements ArticlePlay
         }
     }
 
-    @Override
-    public void updateArticle(Article article) {
-
-    }
+//    @Override
+//    public void updateArticle(Article article) {
+//
+//    }
 
     @Override
     protected void onDestroy() {
